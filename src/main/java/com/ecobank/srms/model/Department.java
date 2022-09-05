@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data////////
+@Data
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
