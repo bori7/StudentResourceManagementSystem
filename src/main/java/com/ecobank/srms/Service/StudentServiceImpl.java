@@ -39,7 +39,7 @@ public class StudentServiceImpl implements StudentService {
             BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
             final String encodedPassword = bcryptPasswordEncoder.encode(studentRequest.getPassword());
             studentRequest.setPassword(encodedPassword);
-            Long Dept_Id = departmentService.getDeptId(studentRequest.getDepartment().toUpperCase());
+            Long Dept_Id = departmentService.getDeptId(studentRequest.getDepartment());
             Date date = new Date();
             studentRequest.setDate_Created(date);
             studentRequest.setDept_Id(Dept_Id);
