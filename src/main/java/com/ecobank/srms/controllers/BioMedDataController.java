@@ -16,6 +16,7 @@ import java.io.IOException;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/student")
 public class BioMedDataController {
 
