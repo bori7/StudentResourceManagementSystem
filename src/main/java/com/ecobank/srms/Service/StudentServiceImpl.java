@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
         } else {
             String Password = studentRequest.getPassword();
             String confirmPassword = studentRequest.getConfirmPassword();
-            if (!Password.equals(confirmPassword)){
+            if (!(Password.equals(confirmPassword))){
                 return StudentResponse.builder().message("Password must match confirm Password").build();
             }
             else{
