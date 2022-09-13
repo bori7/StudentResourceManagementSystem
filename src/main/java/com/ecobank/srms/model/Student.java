@@ -27,10 +27,10 @@ public class Student {
 //    private BioMedData bioMedData;
 
 
-    @NotNull
-    @Column(name = "reg_no",unique = true,nullable = false)
-    //@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
-    private String regNo;
+//    @NotNull
+//    @Column(name = "reg_no",unique = true,nullable = false)
+//    //@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+//    private String regNo;
 
 
     @NotNull
@@ -42,17 +42,17 @@ public class Student {
     private String department;
 
 
-    @NotNull
-    @Column(name = "L_NAME",unique = false,nullable = false)
-    private String lastName;
+//    @NotNull
+//    @Column(name = "L_NAME",unique = false,nullable = false)
+//    private String lastName;
+//
+//    @NotNull
+//    @Column(name = "F_NAME",unique = false,nullable = false)
+//    private String firstName;
 
     @NotNull
-    @Column(name = "F_NAME",unique = false,nullable = false)
-    private String firstName;
-
-    @NotNull
-    @Column(name = "USR_NAME",unique = true,nullable = false)
-    private String userName;
+    @Column(name = "JAMBNO",unique = true,nullable = false)
+    private String jambNo;
 
     @NotNull
     @Column(name = "PASSWORD",nullable = false)
@@ -72,6 +72,9 @@ public class Student {
     @NotNull
     @Column(name = "dept_id",nullable = false)
     private Long dept_id;
+
+    @Column(name = "Email",unique = true ,nullable = false)
+    private String email;
     //private Department stud_dept;
 
 

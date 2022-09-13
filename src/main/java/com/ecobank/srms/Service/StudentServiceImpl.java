@@ -27,32 +27,39 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse Register(StudentRequest studentRequest) throws IOException {
-        boolean isPresent = studentRepository.findPersonByRegNo(studentRequest.getRegNo()).isPresent();
+        boolean isPresent = studentRepository.findPersonByJambNo(studentRequest.getJambNo()).isPresent();
         //Student isPresent = studentRepository.findByUserName(studentRequest.getUserName());
 
         if ((isPresent)) {
             return StudentResponse.builder().message("This registration exists please sign in").build();
             //return "The Registration `number is existing, please sign in";
         } else {
-            Student student = new Student();
-            ModelMapper modelMapper = new ModelMapper();
-            BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
-            final String encodedPassword = bcryptPasswordEncoder.encode(studentRequest.getPassword());
-            studentRequest.setPassword(encodedPassword);
-            Long Dept_Id = departmentService.getDeptId(studentRequest.getDepartment());
-            Date date = new Date();
-            studentRequest.setDate_Created(date);
-            studentRequest.setDept_Id(Dept_Id);
-            logger.info("Registration No " + studentRequest.getRegNo());
-            logger.info("Last Name " + studentRequest.getLastName());
-            logger.info("First Name " + studentRequest.getFirstName());
-            logger.info("Level " + studentRequest.getLevel());
-            logger.info("Department" + studentRequest.getDepartment());
-            logger.info("USerName " + studentRequest.getUserName());
-            modelMapper.map(studentRequest, student);
+            String Password = studentRequest.getPassword();
+            String confirmPassword = studentRequest.getConfirmPassword();
+            if (!Password.equals(confirmPassword)){
+                return StudentResponse.builder().message("Password must match confirm Password").build();
+            }
+            else{
+                Student student = new Student();
+                ModelMapper modelMapper = new ModelMapper();
+                BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
+                final String encodedPassword = bcryptPasswordEncoder.encode(studentRequest.getPassword());
+                studentRequest.setPassword(encodedPassword);
+                Long Dept_Id = departmentService.getDeptId(studentRequest.getDepartment());
+                Date date = new Date();
+                studentRequest.setDate_Created(date);
+                studentRequest.setDept_Id(Dept_Id);
+                logger.info("Matric No" + studentRequest.getJambNo());
+                logger.info(" Password" + studentRequest.getPassword());
+                logger.info("Level " + studentRequest.getLevel());
+                logger.info("Department" + studentRequest.getDepartment());
+                logger.info("Email " + studentRequest.getEmail());
+                modelMapper.map(studentRequest, student);
 
-            studentRepository.save(student);
-            return StudentResponse.builder().message("Thank you for registering").build();
+                studentRepository.save(student);
+                return StudentResponse.builder().message("Thank you for registering").build();
+            }
+
         }
     }
 
@@ -60,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponse Login(LoginRequest loginRequest) throws IOException {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Student student = new Student();
-        student = studentRepository.findByUserName((loginRequest.getUserName()));
+        student = studentRepository.findByJambNo((loginRequest.getJambNo()));
 
         if (student == null) {
             return StudentResponse.builder().message("The User Doesn't exist").build();
@@ -80,7 +87,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ChangePasswordResponse updateCurrentPassword(ChangePasswordRequest changePasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Student currentStudent = studentRepository.findByUserName(changePasswordRequest.getUserName());
+        Student currentStudent = studentRepository.findByJambNo(changePasswordRequest.getUserName());
         String newPassword = changePasswordRequest.getNewPassword();
         String confirmPassword = changePasswordRequest.getConfirmPassword();
 
@@ -104,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResetPasswordResponse reset(ResetPasswordRequest resetPasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Student currentStudent = studentRepository.findByUserName(resetPasswordRequest.getUserName());
+        Student currentStudent = studentRepository.findByJambNo(resetPasswordRequest.getUserName());
         String newPassword = resetPasswordRequest.getNewPassword();
         String confirmPassword = resetPasswordRequest.getConfirmPassword();
 
