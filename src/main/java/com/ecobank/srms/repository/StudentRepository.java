@@ -8,9 +8,9 @@ import java.util.Optional;
 @Repository
 //@Qualifier("Student")
 public interface StudentRepository extends JpaRepository<Student,Long> {
-    Optional<Student> findPersonByRegNo(String RegNo);
+    Optional<Student> findPersonByJambNo(String jambNo);
 
-    Student findByUserName(String userName);
+    Student findByJambNo(String JambNo);
 
     //Student findByUserNameByRegNo(String userName);
 

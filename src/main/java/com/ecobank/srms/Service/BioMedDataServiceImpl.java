@@ -67,7 +67,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 //        ModelMapper modelMapper= new ModelMapper();
 
 
-         boolean ispresent = studentRepository.findPersonByRegNo(bioMedDataRequest.getJambNo()).isPresent();
+         boolean ispresent = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).isPresent();
 
         if (!ispresent){
             return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
@@ -163,7 +163,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     public BioMedDataResponse saveProfile(BioMedDataRequest bioMedDataRequest)  {
 //        BioMedData bioMedData = new BioMedData();
 //        ModelMapper modelMapper= new ModelMapper();
-        boolean ispresent = studentRepository.findPersonByRegNo(bioMedDataRequest.getJambNo()).isPresent();
+        boolean ispresent = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).isPresent();
 
         if (!ispresent){
             return BioMedDataResponse.builder().message("Cannot upload picture to unknown JambNo").build();
