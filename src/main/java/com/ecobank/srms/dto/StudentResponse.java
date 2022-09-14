@@ -9,4 +9,5 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentResponse {
     private String message;
+    private String token;
 }

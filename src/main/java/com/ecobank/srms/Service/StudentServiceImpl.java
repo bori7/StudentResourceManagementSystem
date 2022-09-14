@@ -1,15 +1,20 @@
 package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
+import com.ecobank.srms.encryption.EncryptionService;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.StudentRepository;
 //import org.modelmapper.ModelMapper;
+import com.ecobank.srms.utils.Credentials;
+import com.ecobank.srms.utils.JwtUtils;
+import com.ecobank.srms.utils.Token;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -22,6 +27,16 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
     @Autowired
     private DepartmentServiceImpl departmentService;
+
+    @Autowired
+    HttpServletRequest httpServletRequest;
+
+
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
+    EncryptionService encryptionService;
     Logger logger = Logger.getLogger(StudentServiceImpl.class.getName());
 
 
@@ -35,7 +50,9 @@ public class StudentServiceImpl implements StudentService {
             //return "The Registration `number is existing, please sign in";
         } else {
             String Password = studentRequest.getPassword();
+            logger.info("password" + studentRequest.getPassword());
             String confirmPassword = studentRequest.getConfirmPassword();
+            logger.info("Confirmpassword" + studentRequest.getConfirmPassword());
             if (!(Password.equals(confirmPassword))){
                 return StudentResponse.builder().message("Password must match confirm Password").build();
             }
@@ -67,6 +84,11 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponse Login(LoginRequest loginRequest) throws IOException {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Student student = new Student();
+
+
+
+
+        Token token = new Token();
         student = studentRepository.findByJambNo((loginRequest.getJambNo()));
 
         if (student == null) {
@@ -77,7 +99,10 @@ public class StudentServiceImpl implements StudentService {
                 return StudentResponse.builder().message("Incorrect Password").build();
 
             } else {
-                return StudentResponse.builder().message("Login Successful").build();
+
+                token = extractToken(httpServletRequest);
+
+                return StudentResponse.builder().message("Login Successful").token(String.valueOf(token.getAccessToken())).build();
 
             }
         }
@@ -108,10 +133,29 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    public Token extractToken(HttpServletRequest httpServletRequest) {
+
+        Token token = new Token();
+        try {
+            Credentials credentials = encryptionService.extractKeys(httpServletRequest);
+            encryptionService.isCredentialValid(credentials.getClientid(), credentials.getClientsecret(),
+                    credentials.getSourcecode());
+
+            String clientId = credentials.getClientid();
+
+            token = jwtUtils.createToken(clientId);
+
+        } catch (Exception ex) {
+            logger.info("User Add Failed" + ex);
+
+        }
+        return token;
+    }
+
     @Override
     public ResetPasswordResponse reset(ResetPasswordRequest resetPasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Student currentStudent = studentRepository.findByJambNo(resetPasswordRequest.getUserName());
+        Student currentStudent = studentRepository.findByJambNo(resetPasswordRequest.getJambNo());
         String newPassword = resetPasswordRequest.getNewPassword();
         String confirmPassword = resetPasswordRequest.getConfirmPassword();
 
@@ -131,6 +175,9 @@ public class StudentServiceImpl implements StudentService {
             }
         }
     }
+
+
+
 }
 
 //    @Override
