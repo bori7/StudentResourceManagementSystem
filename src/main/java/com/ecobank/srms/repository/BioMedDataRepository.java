@@ -1,19 +1,23 @@
 package com.ecobank.srms.repository;
 
 import com.ecobank.srms.model.BioMedData;
-import com.ecobank.srms.model.Department;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface BioMedDataRepository extends JpaRepository<BioMedData,Long>  {
 
 
-  BioMedData findBystudentId (Long id);
-  BioMedData findAllBystudentId(Long id);
+  @Override
+  Optional<BioMedData> findById(Long aLong);
 
-  BioMedData findAllByJambNo(String id);
+  Optional<BioMedData> findBystudentId (Long id);
+
+  Optional<BioMedData> findAllBystudentId(Long id);
+
+  Optional<BioMedData> findByJambNo(String id);
 
   //BioMedData uploadPictureById(String picture);
 }

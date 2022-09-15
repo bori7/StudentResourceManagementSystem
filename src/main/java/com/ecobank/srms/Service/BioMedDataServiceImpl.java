@@ -6,10 +6,10 @@ import com.ecobank.srms.dto.BioMedDataRequest;
 import com.ecobank.srms.dto.BioMedDataResponse;
 import com.ecobank.srms.dto.ProfileResponse;
 import com.ecobank.srms.model.BioMedData;
+import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.BioMedDataRepository;
 import com.ecobank.srms.repository.StudentRepository;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Data
@@ -67,13 +68,11 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 //        ModelMapper modelMapper= new ModelMapper();
 
 
-         boolean ispresent = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).isPresent();
+        Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
-        if (!ispresent){
+        if (student == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
-        }
 
-        else{
             bioMedDataRequest.setPicture(proPicture);
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
@@ -94,16 +93,54 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Picture " +bioMedData.getPicture());
 
-            modelMapper.map(bioMedDataRequest,bioMedData);
+            modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
             return BioMedDataResponse.builder().message("Thank you").build();
-        }
+    }
 
+
+    public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
+      //Long id = Long.valueOf(bioMedDataRepository.findBystudentId(bioMedDataRequest.getStudentId()));
+
+
+//        BioMedData bioMedData = new BioMedData();
+//        ModelMapper modelMapper= new ModelMapper();
+
+
+        bioMedData = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+
+        if (bioMedData == null)
+            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+
+            bioMedDataRequest.setPicture(proPicture);
+            bioMedDataRequest.setStudentId(bioMedData.getStudentId());
+            logger.info("First_Name " + bioMedDataRequest.getfName());
+            logger.info("Surname"+bioMedDataRequest.getSurName());
+            logger.info("Marital_status " +bioMedDataRequest.getmStatus());
+            logger.info("Marital_status " +bioMedDataRequest.getAge());
+            logger.info("Marital_status " +bioMedDataRequest.getAddress());
+            logger.info("Marital_status " +bioMedDataRequest.getDateOfBirth());
+            logger.info("Marital_status " +bioMedDataRequest.getEmail());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getFaculty());
+            logger.info("Marital_status " +bioMedDataRequest.getJambNo());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("Picture " +bioMedData.getPicture());
+
+            modelMapper.map(bioMedDataRequest, bioMedData);
+            bioMedDataRepository.save(bioMedData);
+            return BioMedDataResponse.builder().message("Thank you").build();
     }
 
     @Override
     public ProfileResponse display(BioMedDataRequest bioMedDataRequest) throws IOException {
-         BioMedData biodata = bioMedDataRepository.findAllByJambNo(bioMedDataRequest.getJambNo());
+         BioMedData biodata = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
          if(biodata==null){
              return ProfileResponse.builder().message("Please Fill BioData form").build();
          }

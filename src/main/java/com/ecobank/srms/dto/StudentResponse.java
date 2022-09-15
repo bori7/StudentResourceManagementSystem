@@ -10,4 +10,5 @@ import lombok.Data;
 public class StudentResponse {
     private String message;
     private String token;
+
 }

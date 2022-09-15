@@ -29,6 +29,11 @@ public class BioMedDataController {
             return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
         }
 
+        @PutMapping(value = "/update_biodata")
+        public ResponseEntity update(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
+            return ResponseEntity.ok(bioMedDataService.update(bioMedDataRequest));
+        }
+
         @PostMapping(value = "/profile")
         public ResponseEntity display(@RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
                 return ResponseEntity.ok(bioMedDataService.display(bioMedDataRequest));
