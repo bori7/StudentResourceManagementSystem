@@ -88,7 +88,7 @@ public class BioMedData{
     private String email;
 
     @NotNull
-    @Column(name = "Phone_NO",unique = true,nullable = false)
+    @Column(name = "Phone_NO",unique = false,nullable = false)
     private String phoneNo;
 
     @NotNull
