@@ -66,12 +66,16 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 //        BioMedData bioMedData = new BioMedData();
 //        ModelMapper modelMapper= new ModelMapper();
+        BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
 
         Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
         if (student == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+
+        if (!(bio == null))
+                return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
             bioMedDataRequest.setPicture(proPicture);
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -135,7 +139,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
-            return BioMedDataResponse.builder().message("Thank you").build();
+            return BioMedDataResponse.builder().message("Form Updated").build();
     }
 
     @Override
