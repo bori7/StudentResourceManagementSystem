@@ -55,12 +55,17 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponse Register(StudentRequest studentRequest) throws IOException {
         boolean isPresent = studentRepository.findPersonByJambNo(studentRequest.getJambNo()).isPresent();
+
+        boolean isPresent_email = studentRepository.findPersonByEmail(studentRequest.getEmail()).isPresent();
         //Student isPresent = studentRepository.findByUserName(studentRequest.getUserName());
 
-        if ((isPresent)) {
+        if ((isPresent))
             return StudentResponse.builder().message("This registration exists please sign in").build();
-            //return "The Registration `number is existing, please sign in";
-        } else {
+
+        if ((isPresent_email))
+            return StudentResponse.builder().message("This Email exists").build();
+        //return "The Registration `number is existing, please sign in";
+         else {
             String Password = studentRequest.getPassword();
             logger.info("password" + studentRequest.getPassword());
             String confirmPassword = studentRequest.getConfirmPassword();
