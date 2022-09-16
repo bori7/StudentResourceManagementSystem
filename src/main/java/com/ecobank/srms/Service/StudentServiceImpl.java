@@ -10,6 +10,7 @@ import com.ecobank.srms.utils.JwtUtils;
 import com.ecobank.srms.utils.Token;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,17 @@ import java.util.logging.Logger;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    @Value("${client.id}")
+    private String id;
+
+    @Value("${client.sourcecode}")
+    private String sourcecode;
+
+    @Value("${client.secret}")
+    private String secret;
+
+
 
     @Autowired
 
@@ -138,8 +150,9 @@ public class StudentServiceImpl implements StudentService {
         Token token = new Token();
         try {
             Credentials credentials = encryptionService.extractKeys(httpServletRequest);
-            encryptionService.isCredentialValid(credentials.getClientid(), credentials.getClientsecret(),
-                    credentials.getSourcecode());
+            encryptionService.isCredentialValid(id, secret, sourcecode);
+
+
 
             String clientId = credentials.getClientid();
 
