@@ -151,7 +151,14 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
              ProfileResponse profileResponse = new ProfileResponse();
              modelMapper.map(biodata, profileResponse);
-             return  profileResponse;
+             return profileResponse.builder().message("Profile retrived")
+                    .age(biodata.getAge())
+                     .dateOfBirth(biodata.getDateOfBirth())
+                     .email(biodata.getEmail())
+                     .sex(biodata.getSex())
+                     .midName(biodata.getMidName())
+                     .picture(biodata.getPicture())
+                     .faculty(biodata.getFaculty()).build();
 //            return ProfileResponse.builder().message("Thank you")
   //                  .age(biodata.getAge())
 //                     .dateOfBirth(biodata.getDateOfBirth())
