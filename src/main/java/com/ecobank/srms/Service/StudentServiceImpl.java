@@ -162,8 +162,9 @@ public class StudentServiceImpl implements StudentService {
             String clientId = credentials.getClientid();
 
             System.out.println("________id>>>"+clientId);
+            System.out.println("________id....>>>"+secret);
 
-            token = jwtUtils.createToken(clientId);
+            token = jwtUtils.createToken(secret);
 
         } catch (Exception ex) {
             logger.info("User Add Failed" + ex);
