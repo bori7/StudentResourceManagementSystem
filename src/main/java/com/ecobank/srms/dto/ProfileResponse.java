@@ -25,6 +25,9 @@ public class ProfileResponse {
     private String picture;
     private String midName;
     private String age;
+    private String lga;
+    private String stOfOrg;
     private String message;
+
     //private String dobText;
 }

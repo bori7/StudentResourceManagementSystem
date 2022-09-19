@@ -154,11 +154,14 @@ public class BioMedDataServiceImpl implements BioMedDataService {
              return profileResponse.builder().message("Profile retrived")
                     .age(biodata.getAge())
                      .dateOfBirth(biodata.getDateOfBirth())
-                     .email(biodata.getEmail())
+                     .lga(biodata.getLga())
                      .sex(biodata.getSex())
                      .midName(biodata.getMidName())
                      .picture(biodata.getPicture())
-                     .faculty(biodata.getFaculty()).build();
+                     .faculty(biodata.getFaculty())
+                     .fName(biodata.getFName())
+                     .surName(biodata.getSurName())
+                     .stOfOrg(biodata.getStOfOrg()).build();
 //            return ProfileResponse.builder().message("Thank you")
   //                  .age(biodata.getAge())
 //                     .dateOfBirth(biodata.getDateOfBirth())
