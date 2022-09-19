@@ -161,7 +161,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                      .faculty(biodata.getFaculty())
                      .fName(biodata.getFName())
                      .surName(biodata.getSurName())
-                     .stOfOrg(biodata.getStOfOrg()).build();
+                     .stOfOrg(biodata.getStOfOrg())
+                     .department(biodata.getDepartment()).build();
 //            return ProfileResponse.builder().message("Thank you")
   //                  .age(biodata.getAge())
 //                     .dateOfBirth(biodata.getDateOfBirth())
