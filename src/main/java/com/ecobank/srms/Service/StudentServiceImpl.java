@@ -158,8 +158,10 @@ public class StudentServiceImpl implements StudentService {
             encryptionService.isCredentialValid(id, secret, sourcecode);
 
 
-
+            System.out.println("keys==="+credentials.toString());
             String clientId = credentials.getClientid();
+
+            System.out.println("________id>>>"+clientId);
 
             token = jwtUtils.createToken(clientId);
 
