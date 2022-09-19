@@ -9,6 +9,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static com.ecobank.srms.security.SecurityConstants.GET_AUTH_TOKEN;
 import static com.ecobank.srms.security.SecurityConstants.LOGIN;
@@ -93,9 +100,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 //		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //		source.registerCorsConfiguration("/**", corsConfiguration);
 //
-//		return new CorsFilter(source);
+//		return new CorsFilter((CorsConfigurationSource) source);
 //	}
-
-
-
+//
+//
+//
 }
