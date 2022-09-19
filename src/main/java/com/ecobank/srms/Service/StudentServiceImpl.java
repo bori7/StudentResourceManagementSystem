@@ -119,7 +119,7 @@ public class StudentServiceImpl implements StudentService {
 
                 token = extractToken(httpServletRequest);
 
-                return StudentResponse.builder().message("Login Successful").token(String.valueOf(token.getAccessToken())).build();
+                return StudentResponse.builder().message("Login Successful").jambNo(loginRequest.getJambNo()).token(String.valueOf(token.getAccessToken())).build();
 
             }
         }
