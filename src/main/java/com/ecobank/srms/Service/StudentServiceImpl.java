@@ -132,7 +132,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ChangePasswordResponse updateCurrentPassword(ChangePasswordRequest changePasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Student currentStudent = studentRepository.findByJambNo(changePasswordRequest.getUserName());
+        Student currentStudent = studentRepository.findByJambNo(changePasswordRequest.getJambNo());
         String newPassword = changePasswordRequest.getNewPassword();
         String confirmPassword = changePasswordRequest.getConfirmPassword();
 
