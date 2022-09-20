@@ -91,7 +91,10 @@ public class StudentServiceImpl implements StudentService {
                 modelMapper.map(studentRequest, student);
 
                 studentRepository.save(student);
-                return StudentResponse.builder().message("Thank you for registering").build();
+                return StudentResponse.builder().message("Thank you for registering")
+                        .jambNo(studentRequest.getJambNo())
+                        .level(studentRequest.getLevel())
+                        .build();
             }
 
         }
