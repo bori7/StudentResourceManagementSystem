@@ -12,5 +12,6 @@ public class StudentResponse {
     private String token;
     private String jambNo;
     private String level;
+    private String department;
 
 }

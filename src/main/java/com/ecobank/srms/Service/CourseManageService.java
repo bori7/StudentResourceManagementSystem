@@ -13,4 +13,6 @@ public interface CourseManageService {
     Object view(ViewCoursesRequest viewCoursesRequest) throws Exception;
 
     Courses getAll (String courseName);
+
+    Object getCoursebyDepartment(CoursesDisplayRequest CoursesDisplayRequest);
 }

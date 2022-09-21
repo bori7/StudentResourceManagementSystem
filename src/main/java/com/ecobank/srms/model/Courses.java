@@ -44,5 +44,5 @@ public class Courses {
 
     @NotNull
     @Column(name = "Department_Name" ,unique = false,nullable = false)
-    private String department_name;
+    private String departmentname;
 }

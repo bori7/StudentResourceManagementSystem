@@ -13,4 +13,5 @@ public class BioMedDataResponse {
     private String message;
     private String code;
     private String url;
+    private String jambNo;
 }

@@ -13,6 +13,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,7 +78,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         if (!(bio == null))
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
-            bioMedDataRequest.setPicture(proPicture);
+            //bioMedDataRequest.setPicture(proPicture);
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
             logger.info("Marital_status " +bioMedDataRequest.getmStatus());
@@ -114,9 +115,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         bioMedData = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
         if (bioMedData == null)
-            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+            return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
 
-            bioMedDataRequest.setPicture(proPicture);
+            //bioMedDataRequest.setPicture(proPicture);
             bioMedDataRequest.setStudentId(bioMedData.getStudentId());
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
@@ -198,16 +199,31 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     }
 
     @Override
-    public BioMedDataResponse upload(MultipartFile  bioMedPic) throws IOException {
+
+    public BioMedDataResponse upload(MultipartFile  bioMedPic , String No) throws IOException {
             String picture;
             File file = storeImage(bioMedPic,"biopic" );
             Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
             picture = String.valueOf(uploadResult.get("url"));
+
+            BioMedData biodata = bioMedDataRepository.findByJambNo(No).orElse(null);
+
+            if(biodata==null){
+                return BioMedDataResponse.builder().message("Please Use existing JambNo").build();
+            }
+
             proPicture = picture;
             bioMedData.setPicture(picture);
+            bioMedData.setJambNo(No);
+            bioMedDataRepository.updatePictureByJambNo(No,picture);
+            //bioMedDataRepository.save(bioMedData);
+
             //logger.info("Picture" + bioMedData.getPicture());
             //bioMedDataRepository.save(bioMedData);
-        return BioMedDataResponse.builder().message("Picture Uploaded").url(picture).build();
+            return BioMedDataResponse.builder().message("Picture Uploaded")
+                    .url(picture)
+                    .jambNo(No)
+                    .build();
     }
 
 

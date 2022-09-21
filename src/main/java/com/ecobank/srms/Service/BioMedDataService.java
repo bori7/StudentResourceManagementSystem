@@ -19,7 +19,7 @@ public interface BioMedDataService {
 
     File storeImage(MultipartFile img, String Filecat) throws IOException;
 
-    BioMedDataResponse upload(MultipartFile bioMedDataRequest)throws IOException;
+    BioMedDataResponse upload(MultipartFile bioMedDataRequest , String no)throws IOException;
     BioMedDataResponse saveProfile(BioMedDataRequest bioMedDataRequest);
 
 }

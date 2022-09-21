@@ -9,4 +9,5 @@ public class ViewCourse {
     private String courseName;
     private String status;
     private String unit;
+    private Long courseId;
 }

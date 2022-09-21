@@ -86,7 +86,7 @@ public class StudentServiceImpl implements StudentService {
                 logger.info("Matric No" + studentRequest.getJambNo());
                 logger.info(" Password" + studentRequest.getPassword());
                 logger.info("Level " + studentRequest.getLevel());
-                logger.info("Department" + studentRequest.getDepartment());
+                logger.info("Department" + studentRequest.getDepartment().toUpperCase());
                 logger.info("Email " + studentRequest.getEmail());
                 modelMapper.map(studentRequest, student);
 
@@ -94,6 +94,7 @@ public class StudentServiceImpl implements StudentService {
                 return StudentResponse.builder().message("Thank you for registering")
                         .jambNo(studentRequest.getJambNo())
                         .level(studentRequest.getLevel())
+                        .department(studentRequest.getDepartment().toUpperCase())
                         .build();
             }
 
