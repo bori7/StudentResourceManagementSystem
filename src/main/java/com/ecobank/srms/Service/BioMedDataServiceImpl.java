@@ -272,8 +272,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     }
 
     @Override
-    public DisplayPictureResponse display(DisplayPictureRequest displayPictureRequest) throws IOException {
-        boolean ispresent = studentRepository.findPersonByJambNo(displayPictureRequest.getJambNo()).isPresent();
+    public DisplayPictureResponse displayPic(DisplayPictureRequest displayPictureRequest) throws IOException {
+        boolean ispresent = bioMedDataRepository.findByJambNo(displayPictureRequest.getJambNo()).isPresent();
 
         if (!ispresent){
             return DisplayPictureResponse.builder().message("Cannot displau picture to unknown JambNo").build();

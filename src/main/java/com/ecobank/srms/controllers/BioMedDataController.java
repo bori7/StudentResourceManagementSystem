@@ -2,10 +2,7 @@ package com.ecobank.srms.controllers;
 
 import com.ecobank.srms.Service.BioMedDataService;
 import com.ecobank.srms.Service.StudentService;
-import com.ecobank.srms.dto.BioMedDataRequest;
-import com.ecobank.srms.dto.BioMedDataResponse;
-import com.ecobank.srms.dto.ProfileResponse;
-import com.ecobank.srms.dto.StudentRequest;
+import com.ecobank.srms.dto.*;
 import com.ecobank.srms.repository.BioMedDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -43,6 +40,11 @@ public class BioMedDataController {
         @PostMapping(value = "/upload_biodata_picture")
         public ResponseEntity upload(@RequestParam("image")  MultipartFile bioMedPic , @RequestParam("jambNo")  String jambNo) throws IOException {
                 return ResponseEntity.ok(bioMedDataService.upload(bioMedPic , jambNo));
+        }
+
+        @PostMapping(value = "/display_biodata_picture")
+        public ResponseEntity displayPic(@RequestBody DisplayPictureRequest displayPictureRequest) throws IOException {
+                return ResponseEntity.ok(bioMedDataService.displayPic(displayPictureRequest));
         }
 
 
