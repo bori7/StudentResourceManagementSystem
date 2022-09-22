@@ -22,4 +22,6 @@ public interface BioMedDataService {
     BioMedDataResponse upload(MultipartFile bioMedDataRequest , String no)throws IOException;
     BioMedDataResponse saveProfile(BioMedDataRequest bioMedDataRequest);
 
+    DisplayPictureResponse display(DisplayPictureRequest displayPictureRequest) throws IOException;
+
 }

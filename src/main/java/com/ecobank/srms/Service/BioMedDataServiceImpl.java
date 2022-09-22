@@ -2,9 +2,7 @@ package com.ecobank.srms.Service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.ecobank.srms.dto.BioMedDataRequest;
-import com.ecobank.srms.dto.BioMedDataResponse;
-import com.ecobank.srms.dto.ProfileResponse;
+import com.ecobank.srms.dto.*;
 import com.ecobank.srms.model.BioMedData;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.BioMedDataRepository;
@@ -46,6 +44,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     @Autowired
     private StudentService studentService;
 
+//    @Autowired
+//    private BioMedDataServiceImpl bioMedDataService;
+
     Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", "bomacloudsdatabase",
             "api_key", "491885325678685",
@@ -78,7 +79,14 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         if (!(bio == null))
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
-            //bioMedDataRequest.setPicture(proPicture);
+
+        if(bioMedDataRequest.getPicture().trim()==null){
+            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+        }
+
+        bioMedDataRequest.setPicture(upload(bioMedDataRequest.getPicture().trim()));
+
+
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
             logger.info("Marital_status " +bioMedDataRequest.getmStatus());
@@ -117,7 +125,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         if (bioMedData == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
 
-            //bioMedDataRequest.setPicture(proPicture);
+
             bioMedDataRequest.setStudentId(bioMedData.getStudentId());
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
@@ -163,7 +171,10 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                      .fName(biodata.getFName())
                      .surName(biodata.getSurName())
                      .stOfOrg(biodata.getStOfOrg())
-                     .department(biodata.getDepartment()).build();
+                     .department(biodata.getDepartment())
+                     .picture(biodata.getPicture()).build();
+
+
 //            return ProfileResponse.builder().message("Thank you")
   //                  .age(biodata.getAge())
 //                     .dateOfBirth(biodata.getDateOfBirth())
@@ -198,8 +209,15 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
     }
 
-    @Override
+    public String upload(String testpicture) throws IOException{
+        String picture;
+        File file = new File(testpicture);
+        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        picture = String.valueOf(uploadResult.get("url"));
+        return picture;
+    }
 
+    @Override
     public BioMedDataResponse upload(MultipartFile  bioMedPic , String No) throws IOException {
             String picture;
             File file = storeImage(bioMedPic,"biopic" );
@@ -241,5 +259,29 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             bioMedDataRepository.save(bioMedData);
             return BioMedDataResponse.builder().message("Picture saved").build();
         }
+    }
+
+    public String getPic(String jambNo){
+        String url = null;
+        Optional<BioMedData> bioMedData1 = bioMedDataRepository.findByJambNo(jambNo);
+        if (!bioMedData1.isPresent()){
+            return "Student does not exist";
+        }
+        url = bioMedData1.get().getPicture();
+        return url;
+    }
+
+    @Override
+    public DisplayPictureResponse display(DisplayPictureRequest displayPictureRequest) throws IOException {
+        boolean ispresent = studentRepository.findPersonByJambNo(displayPictureRequest.getJambNo()).isPresent();
+
+        if (!ispresent){
+            return DisplayPictureResponse.builder().message("Cannot displau picture to unknown JambNo").build();
+        }
+       String url = getPic(displayPictureRequest.getJambNo());
+        if (url == null){
+           return DisplayPictureResponse.builder().message("no picture present").build();
+        }
+        return DisplayPictureResponse.builder().message("Picture Displayed").picUrl(url).code("00").build();
     }
 }

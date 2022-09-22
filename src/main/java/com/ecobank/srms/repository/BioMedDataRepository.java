@@ -24,6 +24,8 @@ public interface BioMedDataRepository extends JpaRepository<BioMedData,Long>  {
 
   Optional<BioMedData> findByJambNo(String id);
 
+  //Optional<BioMedData> findpictureByjambNo(String jambNo);
+
   @Modifying
   @Query("update BioMedData b set b.picture = :imageUrl WHERE b.jambNo = :jambNo")
   void updatePictureByJambNo(@Param("jambNo") String jambNo, @Param("imageUrl") String imageUrl);

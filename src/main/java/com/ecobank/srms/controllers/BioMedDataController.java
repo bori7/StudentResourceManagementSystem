@@ -41,7 +41,6 @@ public class BioMedDataController {
         }
 
         @PostMapping(value = "/upload_biodata_picture")
-
         public ResponseEntity upload(@RequestParam("image")  MultipartFile bioMedPic , @RequestParam("jambNo")  String jambNo) throws IOException {
                 return ResponseEntity.ok(bioMedDataService.upload(bioMedPic , jambNo));
         }
