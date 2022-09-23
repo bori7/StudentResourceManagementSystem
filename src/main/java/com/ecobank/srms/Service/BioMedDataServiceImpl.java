@@ -80,7 +80,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
 
-        if(bioMedDataRequest.getPicture().trim()==null){
+        if(bioMedDataRequest.getPicture()==null){
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
