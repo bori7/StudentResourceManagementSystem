@@ -32,27 +32,27 @@ public class BioMedDataRequest {
     private String parEmail;
     private String parNO;
 
-    private MultipartFile picture;
-
-    public String getUploadedpic() {
-        return uploadedpic;
-    }
-
-    public void setUploadedpic(String uploadedpic) {
-        this.uploadedpic = uploadedpic;
-    }
-
-    private String uploadedpic;
-
-
-
-    public MultipartFile getPicture() {
-        return picture;
-    }
-
-    public void setPicture(MultipartFile picture) {
-        this.picture = picture;
-    }
+//    private MultipartFile picture;
+//
+//    public String getUploadedpic() {
+//        return uploadedpic;
+//    }
+//
+//    public void setUploadedpic(String uploadedpic) {
+//        this.uploadedpic = uploadedpic;
+//    }
+//
+//    private String uploadedpic;
+//
+//
+//
+//    public MultipartFile getPicture() {
+//        return picture;
+//    }
+//
+//    public void setPicture(MultipartFile picture) {
+//        this.picture = picture;
+//    }
 
     public Long getStudentId() {
         return studentId;

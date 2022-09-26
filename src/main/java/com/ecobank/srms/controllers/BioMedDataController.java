@@ -23,8 +23,8 @@ public class BioMedDataController {
 
 
         @PostMapping(value = "/save_biodata")
-        public ResponseEntity save(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
-            return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
+        public ResponseEntity save(@RequestBody MultipartFile bioMedPic ,BioMedDataRequest bioMedDataRequest) throws IOException{
+            return ResponseEntity.ok(bioMedDataService.save(bioMedPic,bioMedDataRequest));
         }
 
         @PutMapping(value = "/update_biodata")
