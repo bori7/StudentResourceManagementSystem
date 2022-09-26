@@ -49,9 +49,9 @@ public class CourseManageServiceImpl implements CourseManageService {
         int noOfCourses = courseRegisterRequest.getCourses().size();
         for (int i = 0; i < noOfCourses; i++) {
             CourseManage courseManage = new CourseManage();
-            courseManage.setStudReg(courseRegisterRequest.getRegNo());
+            courseManage.setStudReg(courseRegisterRequest.getJambNo());
             courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
-            courseManage.setStudReg(courseRegisterRequest.getRegNo());
+            courseManage.setStudReg(courseRegisterRequest.getJambNo());
             courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i)));
             courseManageRepository.save(courseManage);
             courseManageResponse.setResp_code("00");
