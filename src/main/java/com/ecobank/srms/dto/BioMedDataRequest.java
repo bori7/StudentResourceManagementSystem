@@ -1,8 +1,8 @@
 package com.ecobank.srms.dto;
 
-import com.ecobank.srms.model.Student;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -32,15 +32,25 @@ public class BioMedDataRequest {
     private String parEmail;
     private String parNO;
 
-    private String picture;
+    private MultipartFile picture;
+
+    public String getUploadedpic() {
+        return uploadedpic;
+    }
+
+    public void setUploadedpic(String uploadedpic) {
+        this.uploadedpic = uploadedpic;
+    }
+
+    private String uploadedpic;
 
 
 
-    public String getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 

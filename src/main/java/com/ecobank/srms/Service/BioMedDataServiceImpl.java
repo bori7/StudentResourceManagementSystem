@@ -79,7 +79,11 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
-        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+//        bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
+        bioMedDataRequest.setUploadedpic(uploadbio(bioMedDataRequest.getPicture()));
+        bioMedDataRequest.setPicture(null);
+
 
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -207,6 +211,14 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     public String upload(File testpicture) throws IOException{
         String picture;
         File file = new File(testpicture.toURI());
+        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        picture = String.valueOf(uploadResult.get("url"));
+        return picture;
+    }
+
+    public String uploadbio(MultipartFile  bioMedPic) throws IOException{
+        String picture;
+        File file = storeImage(bioMedPic,"biopic" );
         Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         picture = String.valueOf(uploadResult.get("url"));
         return picture;
