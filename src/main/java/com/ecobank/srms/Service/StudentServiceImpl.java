@@ -2,7 +2,9 @@ package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
 import com.ecobank.srms.encryption.EncryptionService;
+import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
+import com.ecobank.srms.repository.DepartmentRepository;
 import com.ecobank.srms.repository.StudentRepository;
 //import org.modelmapper.ModelMapper;
 import com.ecobank.srms.utils.Credentials;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -41,6 +45,11 @@ public class StudentServiceImpl implements StudentService {
     private DepartmentServiceImpl departmentService;
 
     @Autowired
+    private DepartmentRepository departmentRepository;
+
+
+
+    @Autowired
     HttpServletRequest httpServletRequest;
 
 
@@ -57,6 +66,10 @@ public class StudentServiceImpl implements StudentService {
         boolean isPresent = studentRepository.findPersonByJambNo(studentRequest.getJambNo()).isPresent();
 
         boolean isPresent_email = studentRepository.findPersonByEmail(studentRequest.getEmail()).isPresent();
+
+        Department department = departmentRepository.findByDeptName(studentRequest.getDepartment());
+
+
         //Student isPresent = studentRepository.findByUserName(studentRequest.getUserName());
 
         if ((isPresent))
@@ -64,6 +77,12 @@ public class StudentServiceImpl implements StudentService {
 
         if ((isPresent_email))
             return StudentResponse.builder().message("This Email exists").build();
+
+        if ((department==null)){
+            return StudentResponse.builder().message(
+                    "This Department has not been created/ does not exist"
+            ).build();
+        }
         //return "The Registration `number is existing, please sign in";
          else {
             String Password = studentRequest.getPassword();
@@ -123,7 +142,13 @@ public class StudentServiceImpl implements StudentService {
 
                 token = extractToken(httpServletRequest);
 
-                return StudentResponse.builder().message("Login Successful").jambNo(loginRequest.getJambNo()).token(String.valueOf(token.getAccessToken())).build();
+                return StudentResponse.builder().message("Login Successful")
+                        .jambNo(loginRequest.getJambNo())
+                        .token(String.valueOf(token.getAccessToken()))
+                        .department(student.getDepartment())
+                        .level(student.getLevel())
+                        .email(student.getEmail())
+                        .build();
 
             }
         }
@@ -187,9 +212,11 @@ public class StudentServiceImpl implements StudentService {
         if (currentStudent == null) {
             return new ResetPasswordResponse("Please Register, User does not exist");
         } else {
-            if (passwordEncoder.matches(newPassword, currentStudent.getPassword())) {
+            if (passwordEncoder.matches(newPassword, currentStudent.getPassword()))
+            {
                 return new ResetPasswordResponse("Old password cannot be the same as new password");
-            } else {
+            } else
+            {
                 if (confirmPassword.equals(newPassword)) {
                     currentStudent.setPassword(passwordEncoder.encode(newPassword));
                     studentRepository.save(currentStudent);
@@ -198,6 +225,21 @@ public class StudentServiceImpl implements StudentService {
                     return new ResetPasswordResponse("Password must match");
                 }
             }
+        }
+    }
+
+    @Override
+    public Object displayStud() {
+        List<Student> stud = studentRepository.findAll();
+        List<Object> studView = new ArrayList<>();
+        if (stud==null){
+            return "There are no Departments";
+        }
+        else{
+            for (int i = 0; i < stud.size(); i++){
+                studView.add(stud.get(i));
+            }
+            return studView;
         }
     }
 
