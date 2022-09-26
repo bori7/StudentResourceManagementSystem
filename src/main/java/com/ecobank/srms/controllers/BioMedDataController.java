@@ -28,8 +28,8 @@ public class BioMedDataController {
         }
 
         @PutMapping(value = "/update_biodata")
-        public ResponseEntity update(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
-            return ResponseEntity.ok(bioMedDataService.update(bioMedDataRequest));
+        public ResponseEntity update(@RequestBody MultipartFile bioMedPic, BioMedDataRequest bioMedDataRequest) throws IOException{
+            return ResponseEntity.ok(bioMedDataService.update(bioMedPic,bioMedDataRequest));
         }
 
         @PostMapping(value = "/profile")

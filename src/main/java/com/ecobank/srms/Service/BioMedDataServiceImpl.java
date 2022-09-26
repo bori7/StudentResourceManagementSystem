@@ -117,12 +117,41 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     }
 
 
-    public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
+    public BioMedDataResponse update (MultipartFile  bioMedPic , BioMedDataRequest bioMedDataRequest) throws IOException {
       //Long id = Long.valueOf(bioMedDataRepository.findBystudentId(bioMedDataRequest.getStudentId()));
 
 
 //        BioMedData bioMedData = new BioMedData();
 //        ModelMapper modelMapper= new ModelMapper();
+
+
+
+        if(bioMedPic==null){
+            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+        }
+
+        String picture;
+        File file = storeImage(bioMedPic,"biopic" );
+        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        picture = String.valueOf(uploadResult.get("url"));
+
+//        BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+//
+//
+//        Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+//
+//        if (student == null)
+//            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+//
+//
+
+
+        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+//        bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
+        //bioMedDataRequest.setUploadedpic(uploadbio(bioMedDataRequest.getPicture()));
+        //bioMedDataRequest.setPicture(null);
+
+
 
 
         bioMedData = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
@@ -131,6 +160,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
 
 
+
+            bioMedData.setPicture(picture);
             bioMedDataRequest.setStudentId(bioMedData.getStudentId());
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());

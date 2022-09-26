@@ -13,7 +13,7 @@ public interface BioMedDataService {
     BioMedDataResponse edit(BioMedDataRequest bioMedDataRequest) throws IOException;
     BioMedDataResponse save(MultipartFile bioMedpic ,BioMedDataRequest bioMedDataRequest) throws IOException;
 
-    BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException;
+    BioMedDataResponse update(MultipartFile bioMedPic, BioMedDataRequest bioMedDataRequest) throws IOException;
 
    ProfileResponse display(BioMedDataRequest bioMedDataRequest) throws Exception;
 
