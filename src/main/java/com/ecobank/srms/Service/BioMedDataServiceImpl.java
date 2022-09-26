@@ -63,11 +63,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     @Override
 
     public BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException {
-      //Long id = Long.valueOf(bioMedDataRepository.findBystudentId(bioMedDataRequest.getStudentId()));
-
-
-//        BioMedData bioMedData = new BioMedData();
-//        ModelMapper modelMapper= new ModelMapper();
         BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
 
@@ -84,7 +79,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
-        bioMedDataRequest.setPicture(upload(bioMedDataRequest.getPicture().trim()));
+        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
 
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -209,9 +204,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
     }
 
-    public String upload(String testpicture) throws IOException{
+    public String upload(File testpicture) throws IOException{
         String picture;
-        File file = new File(testpicture);
+        File file = new File(testpicture.toURI());
         Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         picture = String.valueOf(uploadResult.get("url"));
         return picture;
@@ -276,7 +271,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         boolean ispresent = bioMedDataRepository.findByJambNo(displayPictureRequest.getJambNo()).isPresent();
 
         if (!ispresent){
-            return DisplayPictureResponse.builder().message("Cannot displau picture to unknown JambNo").build();
+            return DisplayPictureResponse.builder().message("Cannot display picture to unknown JambNo").build();
         }
        String url = getPic(displayPictureRequest.getJambNo());
         if (url == null){
