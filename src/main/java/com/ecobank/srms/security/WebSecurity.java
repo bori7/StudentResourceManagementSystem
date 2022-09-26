@@ -39,7 +39,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 				.and().authorizeRequests()
-				.antMatchers(GET_AUTH_TOKEN,LOGIN,"/api/v1/user/register", "/api/v1/student/register", "/api/v1/student/login","/api/v1/student/reset_password" ,"/api/v1/tokenPlain","/webjars/**", "/swagger-ui*/**", "/v3/api-docs/**")
+				.antMatchers(GET_AUTH_TOKEN,LOGIN,"/api/v1/user/register", "/api/v1/admin/register", "/api/v1/admin/login", "/api/v1/admin/reset_password"
+						                                    , "/api/v1/student/register", "/api/v1/student/login","/api/v1/student/reset_password"
+						                                     , "/api/v1/tokenPlain","/webjars/**", "/swagger-ui*/**", "/v3/api-docs/**")
 				.permitAll()
 				.anyRequest().authenticated().and()
 				.addFilter(new JWTAuthorizationFilter(authenticationManager()))

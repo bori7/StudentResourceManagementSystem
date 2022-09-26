@@ -14,5 +14,7 @@ public interface StudentService {
 
     ResetPasswordResponse reset(ResetPasswordRequest resetPasswordRequest);
 
+    Object displayStud();
+
     //String GetStId (String userName);
 }

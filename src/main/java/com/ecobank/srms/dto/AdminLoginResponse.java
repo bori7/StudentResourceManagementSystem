@@ -1,12 +1,12 @@
 package com.ecobank.srms.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class ResetPasswordResponse {
+public class AdminLoginResponse {
     private String message;
+    private String token;
+    private String username;
 }
