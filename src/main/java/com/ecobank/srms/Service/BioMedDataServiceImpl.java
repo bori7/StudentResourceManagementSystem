@@ -78,7 +78,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
 
-        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
 //        bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setUploadedpic(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setPicture(null);
@@ -154,7 +154,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
 
-            bioMedData.setPicture(picture);
+            //bioMedData.setPicture(picture);
             bioMedDataRequest.setStudentId(bioMedData.getStudentId());
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());

@@ -50,7 +50,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         for (int i = 0; i < noOfCourses; i++) {
             CourseManage courseManage = new CourseManage();
             courseManage.setStudReg(courseRegisterRequest.getJambNo());
-            courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
+            courseManage.setCourseId(courseRegisterRequest.getCourses().get(i));
             courseManage.setStudReg(courseRegisterRequest.getJambNo());
             courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i)));
             courseManageRepository.save(courseManage);
@@ -74,7 +74,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         } else {
             for (int i = 0; i < courseManage.size(); i++) {
                 ViewCourse viewCourse = new ViewCourse();
-                Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourse_Id());
+                Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourseId());
 
                 viewCourse.setCourseId(courses.getCourseId());
                 viewCourse.setCourseCode(courses.getCourse_code());
@@ -151,7 +151,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         else{
             for (int i = 0; i < courseManage1.size(); i++){
                 CourseManage coursemanage = new CourseManage();
-                courseManageRepository.deleteById(studentDeleteCourseRequest.getCourse_Id());
+                courseManageRepository.deleteBycourseId(studentDeleteCourseRequest.getCourse_Id());
                 courseManageRepository.save(coursemanage);
 
             }

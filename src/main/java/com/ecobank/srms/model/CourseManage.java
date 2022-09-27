@@ -25,7 +25,7 @@ public class CourseManage {
 
     @NotNull
     @Column(name = "course_Id",nullable = false)
-    private Long course_Id;
+    private Long courseId;
 
     @NotNull
     @Column(name = "course_Name",nullable = false)

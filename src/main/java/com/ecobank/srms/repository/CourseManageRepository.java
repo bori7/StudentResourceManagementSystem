@@ -12,5 +12,5 @@ public interface CourseManageRepository  extends JpaRepository<CourseManage, Lon
      Optional<CourseManage> findById (Long Id);
      List<CourseManage> findByStudReg (String studReg);
      //CourseManage findById (Long Id);
-     void deleteById(Long Id);
+     void deleteBycourseId(Long Id);
 }
