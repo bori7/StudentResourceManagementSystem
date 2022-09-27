@@ -78,8 +78,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
 
-        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
-//        bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
+//        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+       //bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setUploadedpic(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setPicture(null);
 
@@ -195,13 +195,14 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                      .lga(biodata.getLga())
                      .sex(biodata.getSex())
                      .midName(biodata.getMidName())
-                     .picture(biodata.getPicture())
+//                     .picture(biodata.getPicture())
                      .faculty(biodata.getFaculty())
                      .fName(biodata.getFName())
                      .surName(biodata.getSurName())
                      .stOfOrg(biodata.getStOfOrg())
                      .department(biodata.getDepartment())
-                     .picture(biodata.getPicture()).build();
+//                     .picture(biodata.getPicture())
+                     .build();
 
 
 //            return ProfileResponse.builder().message("Thank you")

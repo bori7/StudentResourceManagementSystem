@@ -32,6 +32,7 @@ public class BioMedDataRequest {
     private String parEmail;
     private String parNO;
 
+//
 //    private String picture;
 //
 //    public String getPicture() {
