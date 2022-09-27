@@ -128,6 +128,39 @@ public class CourseManageServiceImpl implements CourseManageService {
 
 
     }
+
+//     public Object deleteCourse (Long Id){
+//        CourseManage courseManage = new CourseManage();
+//         boolean Ispresent = courseManageRepository.findById(Id).isPresent();
+//         if (!(Ispresent)){
+//             logger.info("Course does not exist");
+//         }
+//         else {
+//             courseManageRepository.deleteById(Id);
+//         }
+//        return courseManage;
+//    }
+
+    @Override
+    public StudentDeleteCourseResponse studDelete(StudentDeleteCourseRequest studentDeleteCourseRequest) {
+
+        List<CourseManage> courseManage1 = courseManageRepository.findByStudReg(studentDeleteCourseRequest.getJambNo());
+        if (courseManage1 == null) {
+            return StudentDeleteCourseResponse.builder().message("The Student hasnt registered a course").build();
+        }
+        else{
+            for (int i = 0; i < courseManage1.size(); i++){
+                CourseManage coursemanage = new CourseManage();
+                courseManageRepository.deleteById(studentDeleteCourseRequest.getCourse_Id());
+                courseManageRepository.save(coursemanage);
+
+            }
+        }
+        return StudentDeleteCourseResponse.builder().message("Course Deleted").build();
+
+    }
+
+
 }
 
 

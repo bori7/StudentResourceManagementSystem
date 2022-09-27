@@ -62,15 +62,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
     @Override
 
-    public BioMedDataResponse save(MultipartFile  bioMedPic,BioMedDataRequest bioMedDataRequest) throws IOException {
-        if(bioMedPic==null){
-            return BioMedDataResponse.builder().message("Please Upload a photo").build();
-        }
+    public BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException {
 
-        String picture;
-        File file = storeImage(bioMedPic,"biopic" );
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        picture = String.valueOf(uploadResult.get("url"));
 
         BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
@@ -85,13 +78,13 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
 
-        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
 //        bioMedDataRequest.setPicture(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setUploadedpic(uploadbio(bioMedDataRequest.getPicture()));
         //bioMedDataRequest.setPicture(null);
 
 
-            bioMedData.setPicture(picture);
+
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
             logger.info("Marital_status " +bioMedDataRequest.getmStatus());
@@ -109,7 +102,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            //logger.info("Picture " +bioMedData.getPicture());
+            logger.info("Picture " +bioMedData.getPicture());
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);

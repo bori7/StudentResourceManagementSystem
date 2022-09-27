@@ -15,4 +15,6 @@ public interface CourseManageService {
     Courses getAll (String courseName);
 
     Object getCoursebyDepartment(CoursesDisplayRequest CoursesDisplayRequest);
+
+    StudentDeleteCourseResponse studDelete(StudentDeleteCourseRequest studentDeleteCourseRequest);
 }

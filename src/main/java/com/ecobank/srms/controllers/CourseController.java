@@ -3,6 +3,7 @@ package com.ecobank.srms.controllers;
 import com.ecobank.srms.Service.CourseManageService;
 import com.ecobank.srms.dto.CourseRegisterRequest;
 import com.ecobank.srms.dto.CoursesDisplayRequest;
+import com.ecobank.srms.dto.StudentDeleteCourseRequest;
 import com.ecobank.srms.dto.ViewCoursesRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,12 @@ public class CourseController {
     public ResponseEntity getCoursebyDepartment(@RequestBody CoursesDisplayRequest CourseDisplayRequest) throws Exception {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(courseManageService.getCoursebyDepartment(CourseDisplayRequest));
+    }
+
+    @PostMapping(value="/delete_course")
+    public ResponseEntity deleteCourse(@RequestBody StudentDeleteCourseRequest studentDeleteCourseRequest) throws Exception {
+        //return ResponseEntity.ok().body(studentService.Register(studentRequest));
+        return ResponseEntity.ok(courseManageService.studDelete(studentDeleteCourseRequest));
     }
 
 
