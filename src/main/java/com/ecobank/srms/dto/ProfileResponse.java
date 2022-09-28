@@ -28,6 +28,8 @@ public class ProfileResponse {
     private String lga;
     private String stOfOrg;
     private String message;
+    private String jambNo;
+
 
     //private String dobText;
 }

@@ -195,13 +195,12 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                      .lga(biodata.getLga())
                      .sex(biodata.getSex())
                      .midName(biodata.getMidName())
-//                     .picture(biodata.getPicture())
+                     .jambNo(biodata.getJambNo())
                      .faculty(biodata.getFaculty())
                      .fName(biodata.getFName())
                      .surName(biodata.getSurName())
                      .stOfOrg(biodata.getStOfOrg())
                      .department(biodata.getDepartment())
-//                     .picture(biodata.getPicture())
                      .build();
 
 
