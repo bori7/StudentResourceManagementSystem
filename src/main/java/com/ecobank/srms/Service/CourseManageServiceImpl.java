@@ -25,7 +25,7 @@ public class CourseManageServiceImpl implements CourseManageService {
     @Autowired
     private CourseRepository courseRepository;
 
-    Logger logger = Logger.getLogger(CourseManageServiceImpl.class.getName());
+    final Logger logger = Logger.getLogger(CourseManageServiceImpl.class.getName());
 
 
     @Override
@@ -50,7 +50,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         for (int i = 0; i < noOfCourses; i++) {
             CourseManage courseManage = new CourseManage();
             courseManage.setStudReg(courseRegisterRequest.getJambNo());
-            courseManage.setCourseId(courseRegisterRequest.getCourses().get(i));
+            courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
             courseManage.setStudReg(courseRegisterRequest.getJambNo());
             courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i)));
             courseManageRepository.save(courseManage);
@@ -74,7 +74,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         } else {
             for (int i = 0; i < courseManage.size(); i++) {
                 ViewCourse viewCourse = new ViewCourse();
-                Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourseId());
+                Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourse_Id());
 
                 viewCourse.setCourseId(courses.getCourseId());
                 viewCourse.setCourseCode(courses.getCourse_code());
@@ -145,19 +145,24 @@ public class CourseManageServiceImpl implements CourseManageService {
     public StudentDeleteCourseResponse studDelete(StudentDeleteCourseRequest studentDeleteCourseRequest) {
 
         List<CourseManage> courseManage1 = courseManageRepository.findByStudReg(studentDeleteCourseRequest.getJambNo());
-        if (courseManage1 == null) {
+        if (courseManage1 == null || courseManage1.isEmpty()) {
+
             return StudentDeleteCourseResponse.builder().message("The Student hasnt registered a course").build();
         }
         else{
+
             for (int i = 0; i < courseManage1.size(); i++){
+                //logger.info("This is Present_4");
                 CourseManage coursemanage = new CourseManage();
-                courseManageRepository.deleteBycourseId(studentDeleteCourseRequest.getCourse_Id());
-                courseManageRepository.save(coursemanage);
+                logger.info("Course ID: "+studentDeleteCourseRequest.getCourse_Id());
+                logger.info("RegNo: "+studentDeleteCourseRequest.getJambNo());
+                courseManageRepository.deleteBycourseId(studentDeleteCourseRequest.getCourse_Id(),studentDeleteCourseRequest.getJambNo());
+//                courseManageRepository.save(coursemanage);
 
             }
-        }
-        return StudentDeleteCourseResponse.builder().message("Course Deleted").build();
 
+        return StudentDeleteCourseResponse.builder().message("Course Deleted").build();
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.ecobank.srms.controllers;
 
 import com.ecobank.srms.Service.CourseManageService;
+import com.ecobank.srms.Service.CourseManageServiceImpl;
 import com.ecobank.srms.dto.CourseRegisterRequest;
 import com.ecobank.srms.dto.CoursesDisplayRequest;
 import com.ecobank.srms.dto.StudentDeleteCourseRequest;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/v1/student")
@@ -18,6 +20,9 @@ import java.io.IOException;
 public class CourseController {
 //    @Autowired
     private final CourseManageService courseManageService;
+
+
+    final Logger  logger = Logger.getLogger(CourseController.class.getName());
 
 
 
@@ -42,6 +47,7 @@ public class CourseController {
     @PostMapping(value="/delete_course")
     public ResponseEntity deleteCourse(@RequestBody StudentDeleteCourseRequest studentDeleteCourseRequest) throws Exception {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
+        logger.info("This is Present_1: "+studentDeleteCourseRequest);
         return ResponseEntity.ok(courseManageService.studDelete(studentDeleteCourseRequest));
     }
 
