@@ -140,6 +140,7 @@ public class AdminServiceImpl implements AdminService {
         Courses courses_name = courseRepository.findAllByNameOfCourse(adminCreateCourseRequest.getNameOfCourse());
         Department department = departmentRepository.findByDeptName(adminCreateCourseRequest.getDepartmentname());
 
+
         if (!(courses_name == null)) {
             return AdminCreateCourseResponse.builder().message("This course exists already").build();
         }
