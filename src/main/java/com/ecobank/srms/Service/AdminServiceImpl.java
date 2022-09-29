@@ -139,9 +139,8 @@ public class AdminServiceImpl implements AdminService {
 
         Courses courses_name = courseRepository.findAllByNameOfCourse(adminCreateCourseRequest.getNameOfCourse());
         Department department = departmentRepository.findByDeptName(adminCreateCourseRequest.getDepartmentname());
-       // Courses courses_code = courseManageService.getAll(adminCreateCourseRequest.getCourse_code());
 
-        if (courses_name == null) {
+        if (!(courses_name == null)) {
             return AdminCreateCourseResponse.builder().message("This course exists already").build();
         }
 
@@ -149,9 +148,7 @@ public class AdminServiceImpl implements AdminService {
             return AdminCreateCourseResponse.builder().message("This department does not exist").build();
         }
 
-//        if (!(courses_code == null)) {
-//            return AdminCreateCourseResponse.builder().message("This course code already exists").build();
-//        }
+
 
         else {
             Courses courses = new Courses();
