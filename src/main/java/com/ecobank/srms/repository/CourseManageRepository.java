@@ -21,4 +21,9 @@ public interface CourseManageRepository  extends JpaRepository<CourseManage, Lon
      @Modifying
      @Query("delete from CourseManage c where c.course_Id = :Id and c.studReg = :studReg")
      void deleteBycourseId(Long Id,String studReg);
+
+
+     @Modifying
+     @Query("select c from CourseManage c where c.course_Id = :courseId and c.studReg = :studReg")
+     List<CourseManage> findByCourseIdAndStudReg (Long courseId, String studReg);
 }

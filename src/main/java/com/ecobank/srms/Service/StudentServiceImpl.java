@@ -4,6 +4,7 @@ import com.ecobank.srms.dto.*;
 import com.ecobank.srms.encryption.EncryptionService;
 import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
+import com.ecobank.srms.model.ViewStudent;
 import com.ecobank.srms.repository.DepartmentRepository;
 import com.ecobank.srms.repository.StudentRepository;
 //import org.modelmapper.ModelMapper;
@@ -231,34 +232,42 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Object displayStud() {
         List<Student> stud = studentRepository.findAll();
-        List<Object> studView = new ArrayList<>();
+        List<ViewStudent> viewstudentList = new ArrayList<>();
+
         if (stud==null){
             return "There are no Departments";
         }
         else{
             for (int i = 0; i < stud.size(); i++){
-                studView.add(stud.get(i));
-            }
-            return studView;
-        }
-    }
+                ViewStudent viewStudent = new ViewStudent();
+                viewStudent.setJambNo(stud.get(i).getJambNo());
+                viewStudent.setDepartment(stud.get(i).getDepartment());
+                viewStudent.setEmail(stud.get(i).getEmail());
+                viewStudent.setDate_Created(stud.get(i).getDate_Created());
+                viewStudent.setLevel(stud.get(i).getLevel());
+                viewstudentList.add(viewStudent);
 
+                }
+
+            }
+            return viewstudentList;
+        }
+
+
+    @Override
+    public AdminCountStudDisplayResponse countStud() {
+        Long stud = studentRepository.count();
+
+        return AdminCountStudDisplayResponse.builder()
+                .message("Successful")
+                .response("These are the number of Students")
+                .count(stud)
+                .build();
+    }
 
 
 }
 
-//    @Override
-//    public String GetStId(String userName) {
-//            String Idstud = null;
-//            Student stud = studentRepository.findByUserNameByRegNo(userName);
-//            if(stud==null) {
-//                logger.info("The student doesnt exist");
-//            }
-//            else{
-//                Idstud  = stud.getRegNo();
-//            }
-//            return Idstud;
-//        }
 
 
 

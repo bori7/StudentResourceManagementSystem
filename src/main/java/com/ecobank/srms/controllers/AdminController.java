@@ -69,4 +69,26 @@ public class AdminController {
     public ResponseEntity displayStudDept(@RequestBody AdminFindStudentRequest adminFindStudentRequest) throws IOException {
         return ResponseEntity.ok(adminService.displayStudDept(adminFindStudentRequest));
     }
+
+    @GetMapping(value = "/count_all_students")
+    public ResponseEntity displayCountStud() throws IOException{
+        return ResponseEntity.ok(studentService.countStud());
+    }
+
+    @GetMapping(value = "/count_all_departments")
+    public ResponseEntity displayCountDept() throws IOException{
+        return ResponseEntity.ok(departmentService.countDept());
+    }
+
+    @PostMapping(value = "/count_student_dept")
+    public ResponseEntity countStudDept(@RequestBody AdminCountStudDeptRequest adminCountStudDeptRequest) throws IOException {
+        return ResponseEntity.ok(departmentService.displaycountStudDept(adminCountStudDeptRequest));
+    }
+
+
+    @PostMapping(value = "/display_student_level")
+    public ResponseEntity displayStudLevel(@RequestBody AdminFindStudentLevelRequest adminFindStudentLevelRequest) throws IOException {
+        return ResponseEntity.ok(adminService.displayStudLevel(adminFindStudentLevelRequest));
+    }
+
 }

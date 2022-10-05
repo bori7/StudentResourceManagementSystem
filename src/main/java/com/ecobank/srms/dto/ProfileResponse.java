@@ -22,7 +22,7 @@ public class ProfileResponse {
     private String department;
     private String faculty;
     private String dateOfBirth;
-    //private String picture;
+    private String picture;
     private String midName;
     private String age;
     private String lga;

@@ -16,5 +16,7 @@ public interface StudentService {
 
     Object displayStud();
 
+   AdminCountStudDisplayResponse countStud() throws IOException;
+
     //String GetStId (String userName);
 }

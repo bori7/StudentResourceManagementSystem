@@ -21,4 +21,6 @@ public interface AdminService {
 
 
     Object displayStudDept(AdminFindStudentRequest adminFindStudentRequest);
+
+    AdminFindStudentLevelResponse displayStudLevel(AdminFindStudentLevelRequest adminFindStudentLevelRequest);
 }

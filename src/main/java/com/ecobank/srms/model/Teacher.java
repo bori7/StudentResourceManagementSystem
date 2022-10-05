@@ -14,9 +14,9 @@ import java.util.Date;
 @Data
 public class Teacher {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admin_seq")
-    @SequenceGenerator(name = "admin_seq", sequenceName = "admin_seq", allocationSize = 7)
-    private String id_no;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teach_seq")
+    @SequenceGenerator(name = "teach_seq", sequenceName = "teach_seq", allocationSize = 7)
+    private Long id_no;
 
     private String username;
 

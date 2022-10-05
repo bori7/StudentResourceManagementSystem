@@ -246,30 +246,53 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Object displayStudDept(AdminFindStudentRequest adminFindStudentRequest) {
-        //Student stud = studentRepository.findByDepartment(adminFindStudentRequest.getDeptName());
+        Department department = departmentRepository.findByDeptName(adminFindStudentRequest.getDeptName());
         List <Student> student = studentRepository.findByDepartment(adminFindStudentRequest.getDeptName());
 
-       //boolean isPresent = studentRepository.findDepartment(adminFindStudentRequest.getDeptName()).isPresent();
-        //Department dept = departmentRepository.findByDeptName(adminFindStudentRequest.getDeptName());
+        if(department==null){
+            return "There is no department with that Name";
+        }
+
         List<Object> studView = new ArrayList<>();
-        //boolean ans = courses.isEmpty();
+
         if (student.isEmpty()) {
             return "There is no student under the department";
         }
 
-//        if(!(isPresent)){
-//            return "The Department does not exist";
-//        }
-
-//        if(dept == null){
-//            return "department does not exist";
-//        }
         else{
             for (int i = 0; i < student.size(); i++){
                 studView.add(student.get(i));
             }
             return studView;
         }
+    }
+
+    @Override
+    public AdminFindStudentLevelResponse displayStudLevel(AdminFindStudentLevelRequest adminFindStudentLevelRequest) {
+        List <Student> student = studentRepository.findByLevel(adminFindStudentLevelRequest.getLevel());
+        List<Object> studView = new ArrayList<>();
+        if (student.isEmpty()) {
+            return AdminFindStudentLevelResponse.builder()
+                    .message("There are no students with that Level")
+                    .build();
+        }
+        else{
+            for (int i = 0; i < student.size(); i++){
+                ViewStudent viewStudent = new ViewStudent();
+                viewStudent.setJambNo(student.get(i).getJambNo());
+                viewStudent.setLevel(student.get(i).getLevel());
+                viewStudent.setDepartment(student.get(i).getDepartment());
+                viewStudent.setDate_Created(student.get(i).getDate_Created());
+                viewStudent.setEmail(student.get(i).getEmail());
+                studView.add(viewStudent);
+            }
+            return AdminFindStudentLevelResponse.builder()
+                    .response("There are the students with Level :" + adminFindStudentLevelRequest.getLevel())
+                    .message("Successful")
+                    .data(studView)
+                    .build();
+        }
+
     }
 }
 
