@@ -100,7 +100,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Picture " +bioMedData.getPicture());
+            logger.info("Picture " + bioMedDataRequest.getPicture());
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
@@ -210,7 +210,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         logger.info("File path: " + filePath);
         File dest = new File(filePath);
         BufferedImage imgReal = ImageIO.read(new ByteArrayInputStream(img.getBytes()));
-        ImageIO.write(imgReal,"png",new File(filePath));
+        ImageIO.write(imgReal,filecat,new File(filePath));
 
         return dest;
     }
