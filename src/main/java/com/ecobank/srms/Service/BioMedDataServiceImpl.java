@@ -107,10 +107,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return BioMedDataResponse.builder().message("Thank you").build();
     }
 
-    @Override
-    public BioMedDataResponse update(MultipartFile bioMedPic, BioMedDataRequest bioMedDataRequest) throws IOException {
-        return null;
-    }
 
 
     public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
@@ -126,8 +122,28 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         if (bioMedData == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
 
+        logger.info("Current BioData " + bioMedData);
+        logger.info("This is the current state of picture : " + bioMedDataRequest.getPicture());
+        logger.info(" This is the picture of the current user " + bioMedData.getPicture());
+        if(bioMedDataRequest.getPicture()=="" || bioMedDataRequest.getPicture()==null){
+            logger.info("Here I am ");
+            bioMedDataRequest.setPicture(bioMedData.getPicture());
 
-            bioMedDataRequest.setStudentId(bioMedData.getStudentId());
+            logger.info("I am here : " + bioMedDataRequest.getPicture());
+        }else{
+            bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+            logger.info("I am here instead : " + bioMedDataRequest.getPicture());
+        }
+
+
+
+
+
+
+
+
+        bioMedDataRequest.setStudentId(bioMedData.getStudentId());
+
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
             logger.info("Marital_status " +bioMedDataRequest.getmStatus());
@@ -145,7 +161,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Picture " +bioMedData.getPicture());
+            logger.info("Picture " +bioMedDataRequest.getPicture());
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
@@ -162,7 +178,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
              ProfileResponse profileResponse = new ProfileResponse();
              modelMapper.map(biodata, profileResponse);
              return profileResponse.builder().message("Profile retrived")
-                    .age(biodata.getAge())
+                     .age(biodata.getAge())
                      .dateOfBirth(biodata.getDateOfBirth())
                      .lga(biodata.getLga())
                      .sex(biodata.getSex())
@@ -175,16 +191,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                      .picture(biodata.getPicture())
                      .build();
 
-
-//            return ProfileResponse.builder().message("Thank you")
-  //                  .age(biodata.getAge())
-//                     .dateOfBirth(biodata.getDateOfBirth())
-//                     .email(biodata.getEmail())
-//                     .sex(biodata.getSex())
-//                     .midName(biodata.getMidName())
-//                     .picture(biodata.getPicture())
-//                     .faculty(biodata.getFaculty())
-  //                   .build();
     }
 
     @Override
@@ -207,7 +213,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         ImageIO.write(imgReal,"png",new File(filePath));
 
         return dest;
-
     }
 
     public String upload(File testpicture) throws IOException{
