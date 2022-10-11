@@ -11,7 +11,7 @@ import java.io.IOException;
 public interface BioMedDataService {
 
     BioMedDataResponse edit(BioMedDataRequest bioMedDataRequest) throws IOException;
-    BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException;
+    BioMedDataResponse save(MultipartFile bioMedPic,BioMedDataRequest bioMedDataRequest) throws IOException;
 
     BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException;
 

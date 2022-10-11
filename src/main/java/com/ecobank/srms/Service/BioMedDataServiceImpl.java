@@ -62,7 +62,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
     @Override
 
-    public BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException {
+    public BioMedDataResponse save(MultipartFile bioMedPic,BioMedDataRequest bioMedDataRequest) throws IOException {
         BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
 
@@ -75,12 +75,22 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
 
-        if(bioMedDataRequest.getPicture()==null){
+//        if(bioMedDataRequest.getPicture()==null){
+//            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+//        }
+
+        if(bioMedPic==null){
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
-        bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+        String picture;
+        File file = storeImage(bioMedPic,"biopic" );
+        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        picture = String.valueOf(uploadResult.get("url"));
 
+        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+
+        bioMedData.setPicture(picture);
 
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -100,7 +110,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Picture " + bioMedDataRequest.getPicture());
+            //logger.info("Picture " + bioMedDataRequest);
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
@@ -121,19 +131,19 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
         if (bioMedData == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
-
-        logger.info("Current BioData " + bioMedData);
-        logger.info("This is the current state of picture : " + bioMedDataRequest.getPicture());
-        logger.info(" This is the picture of the current user " + bioMedData.getPicture());
-        if(bioMedDataRequest.getPicture()=="" || bioMedDataRequest.getPicture()==null){
-            logger.info("Here I am ");
-            bioMedDataRequest.setPicture(bioMedData.getPicture());
-
-            logger.info("I am here : " + bioMedDataRequest.getPicture());
-        }else{
-            bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
-            logger.info("I am here instead : " + bioMedDataRequest.getPicture());
-        }
+//
+//        logger.info("Current BioData " + bioMedData);
+//        logger.info("This is the current state of picture : " + bioMedDataRequest.getPicture());
+//        logger.info(" This is the picture of the current user " + bioMedData.getPicture());
+//        if(bioMedDataRequest.getPicture()=="" || bioMedDataRequest.getPicture()==null){
+//            logger.info("Here I am ");
+//            bioMedDataRequest.setPicture(bioMedData.getPicture());
+//
+//            logger.info("I am here : " + bioMedDataRequest.getPicture());
+//        }else{
+//            bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+//            logger.info("I am here instead : " + bioMedDataRequest.getPicture());
+//        }
 
 
 
@@ -161,7 +171,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Picture " +bioMedDataRequest.getPicture());
+            //logger.info("Picture " +bioMedDataRequest.getPicture());
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
