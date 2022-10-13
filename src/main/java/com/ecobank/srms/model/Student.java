@@ -16,7 +16,7 @@ import java.util.Date;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(unique = true)
     private Long studentId;
 
 

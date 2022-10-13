@@ -1,5 +1,6 @@
 package com.ecobank.srms.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
@@ -35,14 +36,14 @@ public class StudentRequest {
     private String password;
 
     @NotEmpty(message = "Department doesn't exist")
-    private Long dept_Id;
+    @JsonProperty(value = "dept_id")
+    private Long dept_id;
 
     @NotEmpty
     private String confirmPassword;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date date_Created;
-
     private String email;
 }
 

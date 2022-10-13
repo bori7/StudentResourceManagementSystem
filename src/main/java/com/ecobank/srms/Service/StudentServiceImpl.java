@@ -85,30 +85,36 @@ public class StudentServiceImpl implements StudentService {
             ).build();
         }
         //return "The Registration `number is existing, please sign in";
-         else {
+
+            Student student = new Student();
+
+        logger.info("student1:  " + student);
+            ModelMapper modelMapper = new ModelMapper();
             String Password = studentRequest.getPassword();
             logger.info("password" + studentRequest.getPassword());
             String confirmPassword = studentRequest.getConfirmPassword();
-            logger.info("Confirmpassword" + studentRequest.getConfirmPassword());
+            logger.info("Confirm password" + studentRequest.getConfirmPassword());
             if (!(Password.equals(confirmPassword))){
                 return StudentResponse.builder().message("Password must match confirm Password").build();
             }
-            else{
-                Student student = new Student();
-                ModelMapper modelMapper = new ModelMapper();
                 BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
                 final String encodedPassword = bcryptPasswordEncoder.encode(studentRequest.getPassword());
                 studentRequest.setPassword(encodedPassword);
                 Long Dept_Id = departmentService.getDeptId(studentRequest.getDepartment());
                 Date date = new Date();
                 studentRequest.setDate_Created(date);
-                studentRequest.setDept_Id(Dept_Id);
-                logger.info("Matric No" + studentRequest.getJambNo());
-                logger.info(" Password" + studentRequest.getPassword());
-                logger.info("Level " + studentRequest.getLevel());
-                logger.info("Department" + studentRequest.getDepartment().toUpperCase());
-                logger.info("Email " + studentRequest.getEmail());
+                studentRequest.setDept_id(Dept_Id);
+                logger.info("Matric No: " + studentRequest.getJambNo());
+                logger.info(" Password: " + studentRequest.getPassword());
+                logger.info("Level: " + studentRequest.getLevel());
+                logger.info("Department:" + studentRequest.getDepartment().toUpperCase());
+                logger.info("Email: " + studentRequest.getEmail());
+
+
                 modelMapper.map(studentRequest, student);
+                logger.info("studentRequest:  " + studentRequest);
+
+                logger.info("student:  " + student);
 
                 studentRepository.save(student);
                 return StudentResponse.builder().message("Thank you for registering")
@@ -116,21 +122,21 @@ public class StudentServiceImpl implements StudentService {
                         .level(studentRequest.getLevel())
                         .department(studentRequest.getDepartment().toUpperCase())
                         .build();
-            }
+
 
         }
-    }
+
 
     @Override
     public StudentResponse Login(LoginRequest loginRequest) throws IOException {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Student student = new Student();
+        Student student;
 
 
 
 
-        Token token = new Token();
-        student = studentRepository.findByJambNo((loginRequest.getJambNo()));
+        Token token;
+        student = studentRepository.findByJambNo(loginRequest.getJambNo());
 
         if (student == null) {
             return StudentResponse.builder().message("The User Doesn't exist").build();
