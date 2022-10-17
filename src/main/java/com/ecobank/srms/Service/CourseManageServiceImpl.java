@@ -77,7 +77,7 @@ public class CourseManageServiceImpl implements CourseManageService {
                     courseManageResponse.setResp_msg("Course Saved");
                 }else{
                     courseManageResponse.setResp_code("99");
-                    courseManageResponse.setResp_msg("Course " + courseRegisterRequest.getCourses().get(i) + " has already been registered");
+                    courseManageResponse.setResp_msg("Course " + getCourseName(courseRegisterRequest.getCourses().get(i)) + " has already been registered");
                 }
 
                 courseManageResponse.setData(courseManage);
