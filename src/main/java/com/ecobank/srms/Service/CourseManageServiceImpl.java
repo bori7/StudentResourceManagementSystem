@@ -198,23 +198,31 @@ public class CourseManageServiceImpl implements CourseManageService {
 
     @Override
     public StudentDeleteCourseResponse studDelete(StudentDeleteCourseRequest studentDeleteCourseRequest) {
-
+        logger.info("studentDeleteCourseRequest:" + studentDeleteCourseRequest);
+        List<CourseManage> findRegNoAndStud= courseManageRepository.findByCourseIdAndStudReg(studentDeleteCourseRequest.getCourse_Id(),studentDeleteCourseRequest.getJambNo());
         List<CourseManage> courseManage1 = courseManageRepository.findByStudReg(studentDeleteCourseRequest.getJambNo());
+
+        logger.info("course_Manage : " + courseManage1);
+        logger.info("regNO:" + findRegNoAndStud);
+
         if (courseManage1 == null || courseManage1.isEmpty()) {
 
-            return StudentDeleteCourseResponse.builder().message("The Student hasnt registered a course").build();
+            return StudentDeleteCourseResponse.builder().message("The Student hasn't registered for any course").build();
+        }
+        if (findRegNoAndStud == null || findRegNoAndStud.isEmpty()){
+            return StudentDeleteCourseResponse.builder().message("The student hasn't registered for this course").build();
         }
         else{
 
-            for (int i = 0; i < courseManage1.size(); i++){
-
-                CourseManage coursemanage = new CourseManage();
+//            for (int i = 0; i < courseManage1.size(); i++){
+//
+//                CourseManage coursemanage = new CourseManage();
                 logger.info("Course ID: "+studentDeleteCourseRequest.getCourse_Id());
                 logger.info("RegNo: "+studentDeleteCourseRequest.getJambNo());
                 courseManageRepository.deleteBycourseId(studentDeleteCourseRequest.getCourse_Id(),studentDeleteCourseRequest.getJambNo());
-                courseManageRepository.save(coursemanage);
+//                courseManageRepository.save(coursemanage);
 
-            }
+//            }
 
         return StudentDeleteCourseResponse.builder().message("Course Deleted").build();
         }
