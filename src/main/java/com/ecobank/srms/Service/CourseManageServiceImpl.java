@@ -167,7 +167,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         }
 
         if (courses.isEmpty()) {
-            return " The Department does not have any courses";
+            return "The Department does not have any courses";
         }
 
 

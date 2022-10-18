@@ -7,6 +7,7 @@ import com.ecobank.srms.model.BioMedData;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.BioMedDataRepository;
 import com.ecobank.srms.repository.StudentRepository;
+import com.ecobank.srms.utils.ImageTrans;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
     @Override
 
-    public BioMedDataResponse save(MultipartFile bioMedPic,BioMedDataRequest bioMedDataRequest) throws IOException {
+    public BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException {
         BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
 
@@ -75,22 +76,23 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
 
-//        if(bioMedDataRequest.getPicture()==null){
-//            return BioMedDataResponse.builder().message("Please Upload a photo").build();
-//        }
-
-        if(bioMedPic==null){
+        if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture()==""){
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
-        String picture;
-        File file = storeImage(bioMedPic,"biopic" );
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        picture = String.valueOf(uploadResult.get("url"));
+//        if(bioMedPic==null){
+//            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+//        }
+
+//        String picture;
+//        File file = storeImage(bioMedPic,"biopic" );
+//        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+//        picture = String.valueOf(uploadResult.get("url"));
 
         //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
+        bioMedDataRequest.setPicture(uploadUri(bioMedDataRequest.getPicture()));
 
-        bioMedData.setPicture(picture);
+        //bioMedData.setPicture(picture);
 
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -110,6 +112,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
+            logger.info("BioMedpic" + bioMedDataRequest.getPicture());
             //logger.info("Picture " + bioMedDataRequest);
 
             modelMapper.map(bioMedDataRequest, bioMedData);
@@ -217,18 +220,31 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         String[] filename = img.getOriginalFilename().split("[.]+");
         String suffix = filename[filename.length-1];
         String filePath = realPathtouploads + filecat + "." + suffix;
+        logger.info("File suffix: " + suffix);
         logger.info("File path: " + filePath);
         File dest = new File(filePath);
         BufferedImage imgReal = ImageIO.read(new ByteArrayInputStream(img.getBytes()));
-        ImageIO.write(imgReal,filecat,new File(filePath));
+        ImageIO.write(imgReal,"png",new File(filePath));
 
         return dest;
     }
 
     public String upload(File testpicture) throws IOException{
+
         String picture;
         File file = new File(testpicture.toURI());
         Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        picture = String.valueOf(uploadResult.get("url"));
+        return picture;
+    }
+
+
+
+    public String uploadUri(String Uri) throws IOException{
+        MultipartFile image = ImageTrans.base64ToMultipart(Uri);
+        String picture;
+        File file = storeImage(image,"biopic" );
+        Map uploadResult = cloudinary.uploader().upload(file,ObjectUtils.emptyMap());
         picture = String.valueOf(uploadResult.get("url"));
         return picture;
     }
