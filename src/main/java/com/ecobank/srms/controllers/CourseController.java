@@ -29,6 +29,7 @@ public class CourseController {
     @PostMapping(value="/register_course")
     public ResponseEntity <?> saveCoursePerStudent(@RequestBody CourseRegisterRequest courseRegisterRequest) throws IOException {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
+
         return ResponseEntity.ok(courseManageService.saveCoursePerStudent(courseRegisterRequest));
     }
 

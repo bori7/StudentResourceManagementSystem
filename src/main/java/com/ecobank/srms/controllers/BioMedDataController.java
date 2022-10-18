@@ -28,7 +28,9 @@ public class BioMedDataController {
 
         @PostMapping(value = "/save_biodata")
         public ResponseEntity save(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
+                logger.info("biomedRequest : " +  bioMedDataRequest.getJambNo());
             return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
+
         }
 
         @PutMapping(value = "/update_biodata")

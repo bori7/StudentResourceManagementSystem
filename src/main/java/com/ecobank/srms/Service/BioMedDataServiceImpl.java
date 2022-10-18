@@ -16,11 +16,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -229,6 +232,21 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         return dest;
     }
 
+    public File CompressJpgImage(File input) throws IOException {
+        String basePath = System.getProperty("user.dir");
+        BufferedImage image = ImageIO.read(input);
+        String compressedImagePath = basePath + "/uploads/" + "combinedCompressed.png";
+        File compressedImageFile = new File(compressedImagePath);
+        OutputStream os = new FileOutputStream(compressedImageFile);
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+        ImageWriter writer = writers.next();
+        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+        writer.setOutput(ios); ImageWriteParam param = writer.getDefaultWriteParam();
+        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); param.setCompressionQuality(0.5f);// Change the quality value you prefer
+        writer.write(null, new IIOImage(image, null, null), param); os.close(); ios.close(); writer.dispose();
+         return compressedImageFile;
+         }
+
     public String upload(File testpicture) throws IOException{
 
         String picture;
@@ -244,6 +262,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         MultipartFile image = ImageTrans.base64ToMultipart(Uri);
         String picture;
         File file = storeImage(image,"biopic" );
+        file = CompressJpgImage(file);
         Map uploadResult = cloudinary.uploader().upload(file,ObjectUtils.emptyMap());
         picture = String.valueOf(uploadResult.get("url"));
         return picture;
