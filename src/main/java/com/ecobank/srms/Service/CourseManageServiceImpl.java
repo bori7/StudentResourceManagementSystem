@@ -185,6 +185,7 @@ public class CourseManageServiceImpl implements CourseManageService {
                 viewCourse.setCourseName(courses1.getNameOfCourse());
                 viewCourse.setStatus(courses1.getStatus_course());
                 viewCourse.setUnit(courses1.getUnit_of_course());
+                viewCourse.setCourseDesc(courses1.getCourse_Descr());
                 CoursesDisplayResponse.add(viewCourse);
             }
 
