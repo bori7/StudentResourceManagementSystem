@@ -91,4 +91,9 @@ public class AdminController {
         return ResponseEntity.ok(adminService.displayStudLevel(adminFindStudentLevelRequest));
     }
 
+    @GetMapping(value = "/count_all_students_by_departments")
+    public ResponseEntity displayCountStudbyDept() throws IOException{
+        return ResponseEntity.ok(studentService.displayCountStudbyDept());
+    }
+
 }

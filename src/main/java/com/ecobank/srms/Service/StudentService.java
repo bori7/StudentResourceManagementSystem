@@ -3,6 +3,7 @@ package com.ecobank.srms.Service;
 import com.ecobank.srms.dto.*;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface StudentService {
 
@@ -17,6 +18,8 @@ public interface StudentService {
     Object displayStud();
 
    AdminCountStudDisplayResponse countStud() throws IOException;
+
+    List<Object> displayCountStudbyDept();
 
     //String GetStId (String userName);
 }

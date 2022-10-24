@@ -16,4 +16,6 @@ public interface DepartmentService {
     AdminCountDeptDisplayResponse countDept();
 
     Object displaycountStudDept(AdminCountStudDeptRequest adminCountStudDeptRequest);
+
+
 }

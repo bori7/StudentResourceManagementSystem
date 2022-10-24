@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -269,6 +270,13 @@ public class StudentServiceImpl implements StudentService {
                 .response("These are the number of Students")
                 .count(stud)
                 .build();
+    }
+
+    @Override
+    public List<Object> displayCountStudbyDept() {
+        List<Object> Object = studentRepository.findByDepartmentAndStudent();
+
+        return Collections.singletonList(Object);
     }
 
 

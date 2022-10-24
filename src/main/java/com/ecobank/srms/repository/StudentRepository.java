@@ -1,6 +1,9 @@
 package com.ecobank.srms.repository;
+import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,5 +27,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     long count();
 
 
+    @Query(value = "select dept, count(*) from student GROUP BY dept ", nativeQuery = true)
+    List<Object> findByDepartmentAndStudent();
 
 }
