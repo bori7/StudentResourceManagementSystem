@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -312,6 +314,28 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
+    @Override
+    public AdminStudentGeneralResponse ShowCountNewStudents() {
+       Long newStudent = studentRepository.findNewStudentByGivenDate();
+
+       return AdminStudentGeneralResponse.builder()
+               .code("00")
+               .count(newStudent)
+               .message("These are the number of students after 2022-10-17")
+               .response("Successful")
+               .build();
+    }
+
+    public AdminStudentGeneralResponse ShowCountOldStudents() {
+        Long newStudent = studentRepository.findOldStudentByGivenDate();
+
+        return AdminStudentGeneralResponse.builder()
+                .code("00")
+                .count(newStudent)
+                .message("These are the number of students before 2022-10-17")
+                .response("Successful")
+                .build();
+    }
 
 }
 

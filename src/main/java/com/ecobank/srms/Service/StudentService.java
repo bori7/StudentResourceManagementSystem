@@ -23,4 +23,8 @@ public interface StudentService {
 
 
     AdminFindStudentResponse showCountLevelByDepartment(AdminFindStudentRequest adminFindStudentRequest);
+
+    AdminStudentGeneralResponse ShowCountOldStudents();
+
+    AdminStudentGeneralResponse ShowCountNewStudents();
 }

@@ -101,4 +101,14 @@ public class AdminController {
         return ResponseEntity.ok(studentService.showCountLevelByDepartment(adminFindStudentRequest));
     }
 
+    @GetMapping(value = "/show_number_all_old_students")
+    public ResponseEntity showNumberOldStudents() throws IOException{
+        return ResponseEntity.ok(studentService.ShowCountOldStudents());
+    }
+
+    @GetMapping(value = "/show_number_all_new_students")
+    public ResponseEntity showNumberNewStudents() throws IOException{
+        return ResponseEntity.ok(studentService.ShowCountNewStudents());
+    }
+
 }

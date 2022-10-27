@@ -32,4 +32,9 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     @Query(value = "select level, count(*) from student  WHERE dept = :deptName GROUP BY level", nativeQuery = true)
     List<Object> findLevelByDepartmentAndStudent(String deptName);
 
+    @Query(value = "select count(*) from student where date <= '2022-10-17'", nativeQuery = true)
+    Long findOldStudentByGivenDate();
+
+    @Query(value = "select count(*) from student where date >= '2022-10-17'", nativeQuery = true)
+    Long findNewStudentByGivenDate();
 }
