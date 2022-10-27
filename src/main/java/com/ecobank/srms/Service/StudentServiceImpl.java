@@ -279,6 +279,35 @@ public class StudentServiceImpl implements StudentService {
         return Collections.singletonList(Object);
     }
 
+    @Override
+    public AdminFindStudentResponse showCountLevelByDepartment(AdminFindStudentRequest adminFindStudentRequest) {
+        Department dept = departmentRepository.findByDeptName(adminFindStudentRequest.getDeptName());
+
+        if (dept==null){
+            return AdminFindStudentResponse.builder().message("The Department does not exist").build();
+        }
+
+        List deptList = studentRepository.findLevelByDepartmentAndStudent(adminFindStudentRequest.getDeptName());
+
+        if (deptList==null || deptList.isEmpty())
+        {
+            return AdminFindStudentResponse
+                    .builder()
+                    .response("Failed")
+                    .message("The department cannot be found")
+                    .code("99")
+                    .build();
+        }
+
+        return AdminFindStudentResponse.builder()
+                .response("Successful")
+                .code("00")
+                .message("These are the number of students in the department by level")
+                .list(deptList)
+                .build();
+
+    }
+
 
 }
 

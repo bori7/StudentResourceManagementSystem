@@ -21,5 +21,6 @@ public interface StudentService {
 
     List<Object> displayCountStudbyDept();
 
-    //String GetStId (String userName);
+
+    AdminFindStudentResponse showCountLevelByDepartment(AdminFindStudentRequest adminFindStudentRequest);
 }

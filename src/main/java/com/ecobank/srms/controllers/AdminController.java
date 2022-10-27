@@ -96,4 +96,9 @@ public class AdminController {
         return ResponseEntity.ok(studentService.displayCountStudbyDept());
     }
 
+    @PostMapping(value = "/show_count_all_level_by_department")
+    public ResponseEntity displayStudLevel(@RequestBody AdminFindStudentRequest adminFindStudentRequest) throws IOException {
+        return ResponseEntity.ok(studentService.showCountLevelByDepartment(adminFindStudentRequest));
+    }
+
 }
