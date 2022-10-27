@@ -294,7 +294,7 @@ public class StudentServiceImpl implements StudentService {
             return AdminFindStudentResponse
                     .builder()
                     .response("Failed")
-                    .message("The department cannot be found")
+                    .message("There are no students in these department")
                     .code("99")
                     .build();
         }
