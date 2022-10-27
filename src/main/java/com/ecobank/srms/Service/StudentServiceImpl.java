@@ -284,7 +284,11 @@ public class StudentServiceImpl implements StudentService {
         Department dept = departmentRepository.findByDeptName(adminFindStudentRequest.getDeptName());
 
         if (dept==null){
-            return AdminFindStudentResponse.builder().message("The Department does not exist").build();
+            return AdminFindStudentResponse
+                    .builder()
+                    .response("Failed")
+                    .code("99")
+                    .message("The Department does not exist").build();
         }
 
         List deptList = studentRepository.findLevelByDepartmentAndStudent(adminFindStudentRequest.getDeptName());
