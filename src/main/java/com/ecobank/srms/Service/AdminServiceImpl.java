@@ -294,5 +294,56 @@ public class AdminServiceImpl implements AdminService {
         }
 
     }
+
+    @Override
+    public AdminChangePasswordResponse changePassword(AdminChangePasswordRequest adminChangePasswordRequest) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean iscurrentAdmin = adminRepository.findByUsername(adminChangePasswordRequest.getUsername()).isPresent();
+
+        String currentPassword = adminChangePasswordRequest.getCurrentPassword();
+        String newPassword = adminChangePasswordRequest.getNewPassword();
+        String confirmPassword = adminChangePasswordRequest.getConfirmPassword();
+
+        if (!(iscurrentAdmin)) {
+            return AdminChangePasswordResponse.builder()
+                    .message(adminChangePasswordRequest.getUsername() + " Does not exist, please register ")
+                    .code("99")
+                    .build();
+        } else {
+            Admin currentAdmin = adminRepository.findByUsername(adminChangePasswordRequest.getUsername()).get();
+            if (passwordEncoder.matches(newPassword, currentAdmin.getPassword())) {
+                return AdminChangePasswordResponse.builder()
+                        .code("99")
+                        .message("Old password cannot be the same as new password")
+                        .build();
+            }
+
+            if(!(passwordEncoder.matches(currentPassword,currentAdmin.getPassword()))){
+                return AdminChangePasswordResponse.builder()
+                        .code("99")
+                        .message("password is incorrect, please enter original password")
+                        .build();
+            }
+
+
+
+            else {
+                if (confirmPassword.equals(newPassword)) {
+                    currentAdmin.setPassword(passwordEncoder.encode(newPassword));
+                    adminRepository.save(currentAdmin);
+                    return AdminChangePasswordResponse.builder()
+                            .code("00")
+                            .message("Password successfully changed")
+                            .username(adminChangePasswordRequest.getUsername())
+                            .build();
+                } else {
+                    return AdminChangePasswordResponse.builder()
+                            .message("Password must match")
+                            .code("99")
+                            .build();
+                }
+            }
+        }
+    }
 }
 

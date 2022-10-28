@@ -169,15 +169,24 @@ public class StudentServiceImpl implements StudentService {
     public ChangePasswordResponse updateCurrentPassword(ChangePasswordRequest changePasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Student currentStudent = studentRepository.findByJambNo(changePasswordRequest.getJambNo());
+
+        String currentPassword = changePasswordRequest.getCurrentPassword();
         String newPassword = changePasswordRequest.getNewPassword();
         String confirmPassword = changePasswordRequest.getConfirmPassword();
 
         if (currentStudent == null) {
             return new ChangePasswordResponse("Please Register, User does not exist");
         } else {
+
             if (passwordEncoder.matches(newPassword, currentStudent.getPassword())) {
                 return new ChangePasswordResponse("Old password cannot be the same as new password");
-            } else {
+            }
+
+            if(!(passwordEncoder.matches(currentPassword,currentStudent.getPassword()))){
+                return  new ChangePasswordResponse(" Original Password is Incorrect");
+            }
+
+            else {
                 if (confirmPassword.equals(newPassword)) {
                     currentStudent.setPassword(passwordEncoder.encode(newPassword));
                     studentRepository.save(currentStudent);

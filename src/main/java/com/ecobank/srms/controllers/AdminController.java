@@ -40,6 +40,11 @@ public class AdminController {
         return ResponseEntity.ok(adminService.reset(adminResetPasswordRequest));
     }
 
+    @PostMapping(value = "/change_password")
+    public ResponseEntity changePassword(@RequestBody AdminChangePasswordRequest adminChangePasswordRequest) throws IOException {
+        return ResponseEntity.ok(adminService.changePassword(adminChangePasswordRequest));
+    }
+
     @PostMapping(value = "/create_courses")
     public ResponseEntity create(@RequestBody AdminCreateCourseRequest adminCreateCourseRequest) throws IOException {
         return ResponseEntity.ok(adminService.create(adminCreateCourseRequest));
