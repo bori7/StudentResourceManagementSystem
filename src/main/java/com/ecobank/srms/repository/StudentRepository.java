@@ -27,7 +27,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     long count();
 
 
-    @Query(value = "select dept, count(*) from student GROUP BY dept ", nativeQuery = true)
+    @Query(value = "SELECT distinct(department.department_name), count(student.dept_id) from student FULL OUTER JOIN department ON department.department_Id= student.dept_id GROUP BY department.department_name", nativeQuery = true)
     List<Object> findByDepartmentAndStudent();
     @Query(value = "select level, count(*) from student  WHERE dept = :deptName GROUP BY level", nativeQuery = true)
     List<Object> findLevelByDepartmentAndStudent(String deptName);
