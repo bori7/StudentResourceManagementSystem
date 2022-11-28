@@ -2,11 +2,9 @@ package com.ecobank.srms.repository;
 
 import com.ecobank.srms.SrmsApplication;
 import com.ecobank.srms.controllers.StudentController;
-import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
@@ -36,13 +34,12 @@ class StudentRepositoryTest {
     @Autowired
     private StudentRepository studentRepository;
 
-    //@BeforeAll
+
     public void delete() {
 //        studentRepository.deleteById(16L);
 //        studentRepository.deleteById(17L);
 //        studentRepository.deleteById(18L);
 //        studentRepository.deleteById(19L);
-        //logger.info("Activated before Test");
         studentRepository.deleteByJambNo("JambTest1001");
         studentRepository.deleteByJambNo("JambTest1023");
         studentRepository.deleteByJambNo("JambTest1024");
