@@ -10,4 +10,24 @@ class SrmsApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void testStudentController(){
+
+	}
+
+	@Test
+	void testTeacherController(){
+
+	}
+
+	@Test
+	void testAdminController(){
+
+	}
+
+	@Test
+	void testBioMedDataController(){
+
+	}
+
 }

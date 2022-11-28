@@ -14,8 +14,6 @@ import java.io.IOException;
 @CrossOrigin
 @RequestMapping("api/v1/admin")
 public class AdminController {
-
-
     @Autowired
     private AdminService adminService;
 

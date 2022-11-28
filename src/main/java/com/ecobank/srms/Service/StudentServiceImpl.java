@@ -57,6 +57,7 @@ public class StudentServiceImpl implements StudentService {
     HttpServletRequest httpServletRequest;
 
 
+
     @Autowired
     JwtUtils jwtUtils;
 
@@ -140,16 +141,12 @@ public class StudentServiceImpl implements StudentService {
 
         Token token;
         student = studentRepository.findByJambNo(loginRequest.getJambNo());
-
         if (student == null) {
             return StudentResponse.builder().message("The User Doesn't exist").build();
-
         } else {
             if (!passwordEncoder.matches(loginRequest.getPassword(), student.getPassword())) {
                 return StudentResponse.builder().message("Incorrect Password").build();
-
             } else {
-
                 token = extractToken(httpServletRequest);
 
                 return StudentResponse.builder().message("Login Successful")
@@ -159,7 +156,6 @@ public class StudentServiceImpl implements StudentService {
                         .level(student.getLevel())
                         .email(student.getEmail())
                         .build();
-
             }
         }
 
@@ -197,6 +193,8 @@ public class StudentServiceImpl implements StudentService {
             }
         }
     }
+
+
 
     public Token extractToken(HttpServletRequest httpServletRequest) {
 

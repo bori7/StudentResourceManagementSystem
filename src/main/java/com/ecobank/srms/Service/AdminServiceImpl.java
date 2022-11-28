@@ -135,7 +135,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminCreateCourseResponse create(AdminCreateCourseRequest adminCreateCourseRequest) throws IOException {
-        adminCreateCourseRequest.setDepartmentname(adminCreateCourseRequest.getDepartmentname().toUpperCase());
+        //adminCreateCourseRequest.setDepartmentname(adminCreateCourseRequest.getDepartmentname().toUpperCase());
 
         Courses courses_name = courseRepository.findAllByNameOfCourse(adminCreateCourseRequest.getNameOfCourse());
         Department department = departmentRepository.findByDeptName(adminCreateCourseRequest.getDepartmentname());
@@ -233,7 +233,7 @@ public class AdminServiceImpl implements AdminService {
         adminCreateStudentRequest.setDept_id(Dept_Id);
         modelMapper.map(adminCreateStudentRequest, student);
         studentRepository.save(student);
-        return AdminCreateStudentResponse.builder().message("Thank you for registering")
+        return AdminCreateStudentResponse.builder().message("New Student Created")
                 .jambNo(adminCreateStudentRequest.getJambNo())
                 .level(adminCreateStudentRequest.getLevel())
                 .department(adminCreateStudentRequest.getDepartment().toUpperCase())

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 //@Qualifier("Student")
 public interface StudentRepository extends JpaRepository<Student,Long> {
-    Optional<Student> findPersonByJambNo(String jambNo);
+    Optional<Student>findPersonByJambNo(String jambNo);
     Optional<Student> findPersonByEmail(String email);
 
 
@@ -37,4 +37,11 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
 
     @Query(value = "select count(*) from student where date >= '2022-10-17'", nativeQuery = true)
     Long findNewStudentByGivenDate();
+
+    @Modifying
+    @Query(value = "delete  from student where jambno = :jambNo",nativeQuery = true)
+    void deleteByJambNo(String jambNo);
+
+    @Override
+    void deleteById(Long aLong);
 }

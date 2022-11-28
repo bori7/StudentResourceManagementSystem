@@ -39,13 +39,13 @@ public class BioMedDataController {
         }
 
         @PostMapping(value = "/profile")
-        public ResponseEntity display(@RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
+        public ResponseEntity displayProfile(@RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
                 return ResponseEntity.ok(bioMedDataService.display(bioMedDataRequest));
         }
 
         @PostMapping(value = "/upload_biodata_picture")
-        public ResponseEntity upload(@RequestParam("image")  MultipartFile bioMedPic , @RequestParam("jambNo")  String jambNo) throws IOException {
-                return ResponseEntity.ok(bioMedDataService.upload(bioMedPic , jambNo));
+        public ResponseEntity upload(@RequestBody UploadPictureRequest uploadPictureRequest) throws IOException {
+                return ResponseEntity.ok(bioMedDataService.upload(uploadPictureRequest));
         }
 
         @PostMapping(value = "/display_biodata_picture")

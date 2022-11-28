@@ -39,7 +39,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     @Autowired
     private StudentRepository studentRepository;
 
-
     @Autowired
     private BioMedDataRepository bioMedDataRepository;
 
@@ -48,9 +47,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     @Autowired
     private StudentService studentService;
 
-//    @Autowired
-//    private BioMedDataServiceImpl bioMedDataService;
-
     Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", "bomacloudsdatabase",
             "api_key", "491885325678685",
@@ -58,11 +54,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             "secure", true));
 
     String proPicture;
-
-    @Override
-    public BioMedDataResponse edit(BioMedDataRequest bioMedDataRequest) throws IOException {
-        return null;
-    }
 
     @Override
 
@@ -79,23 +70,13 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                 return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
 
-        if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture()==""){
+        if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture().equals("")){
             return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
-//        if(bioMedPic==null){
-//            return BioMedDataResponse.builder().message("Please Upload a photo").build();
-//        }
 
-//        String picture;
-//        File file = storeImage(bioMedPic,"biopic" );
-//        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-//        picture = String.valueOf(uploadResult.get("url"));
+        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
 
-        //bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
-        bioMedDataRequest.setPicture(uploadUri(bioMedDataRequest.getPicture()));
-
-        //bioMedData.setPicture(picture);
 
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
@@ -103,62 +84,24 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getmStatus());
             logger.info("Marital_status " +bioMedDataRequest.getAge());
             logger.info("Marital_status " +bioMedDataRequest.getAddress());
-            logger.info("Marital_status " +bioMedDataRequest.getDateOfBirth());
-            logger.info("Marital_status " +bioMedDataRequest.getEmail());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getFaculty());
-            logger.info("Marital_status " +bioMedDataRequest.getJambNo());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("BioMedpic" + bioMedDataRequest.getPicture());
-            //logger.info("Picture " + bioMedDataRequest);
+
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
             return BioMedDataResponse.builder().message("Thank you").build();
     }
 
-
-
     public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
-      //Long id = Long.valueOf(bioMedDataRepository.findBystudentId(bioMedDataRequest.getStudentId()));
-
-
-//        BioMedData bioMedData = new BioMedData();
-//        ModelMapper modelMapper= new ModelMapper();
-
 
         bioMedData = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
+
         if (bioMedData == null)
             return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
-//
-//        logger.info("Current BioData " + bioMedData);
-//        logger.info("This is the current state of picture : " + bioMedDataRequest.getPicture());
-//        logger.info(" This is the picture of the current user " + bioMedData.getPicture());
-//        if(bioMedDataRequest.getPicture()=="" || bioMedDataRequest.getPicture()==null){
-//            logger.info("Here I am ");
-//            bioMedDataRequest.setPicture(bioMedData.getPicture());
-//
-//            logger.info("I am here : " + bioMedDataRequest.getPicture());
-//        }else{
-//            bioMedDataRequest.setPicture(upload(new File(bioMedDataRequest.getPicture().trim())));
-//            logger.info("I am here instead : " + bioMedDataRequest.getPicture());
-//        }
-
-
-
-
-
-
 
 
         bioMedDataRequest.setStudentId(bioMedData.getStudentId());
+        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());
@@ -170,14 +113,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             logger.info("Marital_status " +bioMedDataRequest.getMidName());
             logger.info("Marital_status " +bioMedDataRequest.getFaculty());
             logger.info("Marital_status " +bioMedDataRequest.getJambNo());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            logger.info("Marital_status " +bioMedDataRequest.getMidName());
-            //logger.info("Picture " +bioMedDataRequest.getPicture());
+
+
 
             modelMapper.map(bioMedDataRequest, bioMedData);
             bioMedDataRepository.save(bioMedData);
@@ -187,6 +124,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     @Override
     public ProfileResponse display(BioMedDataRequest bioMedDataRequest) throws IOException {
          BioMedData biodata = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+
          if(biodata==null){
              return ProfileResponse.builder().message("Please Fill BioData form").build();
          }
@@ -238,7 +176,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         String compressedImagePath = basePath + "/uploads/" + "combinedCompressed.png";
         File compressedImageFile = new File(compressedImagePath);
         OutputStream os = new FileOutputStream(compressedImageFile);
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("png");
         ImageWriter writer = writers.next();
         ImageOutputStream ios = ImageIO.createImageOutputStream(os);
         writer.setOutput(ios); ImageWriteParam param = writer.getDefaultWriteParam();
@@ -246,16 +184,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         writer.write(null, new IIOImage(image, null, null), param); os.close(); ios.close(); writer.dispose();
          return compressedImageFile;
          }
-
-    public String upload(File testpicture) throws IOException{
-
-        String picture;
-        File file = new File(testpicture.toURI());
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        picture = String.valueOf(uploadResult.get("url"));
-        return picture;
-    }
-
 
 
     public String uploadUri(String Uri) throws IOException{
@@ -268,56 +196,27 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         return picture;
     }
 
-    public String uploadbio(MultipartFile  bioMedPic) throws IOException{
-        String picture;
-        File file = storeImage(bioMedPic,"biopic" );
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        picture = String.valueOf(uploadResult.get("url"));
-        return picture;
-    }
 
     @Override
-    public BioMedDataResponse upload(MultipartFile  bioMedPic , String No) throws IOException {
-            String picture;
-            File file = storeImage(bioMedPic,"biopic" );
-            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-            picture = String.valueOf(uploadResult.get("url"));
+    public BioMedDataResponse upload(UploadPictureRequest uploadPictureRequest) throws IOException {
 
-            BioMedData biodata = bioMedDataRepository.findByJambNo(No).orElse(null);
+
+            BioMedData biodata = bioMedDataRepository.findByJambNo(uploadPictureRequest.getJambNo()).orElse(null);
 
             if(biodata==null){
-                return BioMedDataResponse.builder().message("Please Use existing JambNo").build();
+                return BioMedDataResponse.builder().message("Please Fill in BioData Form").build();
             }
 
-            proPicture = picture;
-            bioMedData.setPicture(picture);
-            bioMedData.setJambNo(No);
-            bioMedDataRepository.updatePictureByJambNo(No,picture);
-            //bioMedDataRepository.save(bioMedData);
 
-            //logger.info("Picture" + bioMedData.getPicture());
-            //bioMedDataRepository.save(bioMedData);
+            String picture1  = uploadUri(uploadPictureRequest.getPicture());
+            bioMedData.setJambNo(uploadPictureRequest.getJambNo());
+            bioMedDataRepository.updatePictureByJambNo(uploadPictureRequest.getJambNo(),picture1);
+
+
             return BioMedDataResponse.builder().message("Picture Uploaded")
-                    .url(picture)
-                    .jambNo(No)
+                    .url(biodata.getPicture())
+                    .jambNo(biodata.getJambNo())
                     .build();
-    }
-
-
-    @Override
-    public BioMedDataResponse saveProfile(BioMedDataRequest bioMedDataRequest)  {
-//        BioMedData bioMedData = new BioMedData();
-//        ModelMapper modelMapper= new ModelMapper();
-        boolean ispresent = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).isPresent();
-
-        if (!ispresent){
-            return BioMedDataResponse.builder().message("Cannot upload picture to unknown JambNo").build();
-        }
-
-        else {
-            bioMedDataRepository.save(bioMedData);
-            return BioMedDataResponse.builder().message("Picture saved").build();
-        }
     }
 
     public String getPic(String jambNo){
@@ -327,6 +226,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return "Student does not exist";
         }
         url = bioMedData1.get().getPicture();
+
+
         return url;
     }
 
@@ -337,7 +238,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         if (!ispresent){
             return DisplayPictureResponse.builder().message("Cannot display picture to unknown JambNo").build();
         }
+
        String url = getPic(displayPictureRequest.getJambNo());
+
         if (url == null){
            return DisplayPictureResponse.builder().message("no picture present").build();
         }

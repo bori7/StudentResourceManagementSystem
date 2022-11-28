@@ -1,5 +1,6 @@
 package com.ecobank.srms.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -60,6 +61,8 @@ public class Student {
 
     @NotNull
     @Column(name = "DATE",nullable = false)
+    @Temporal(value = TemporalType.DATE)
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-DD")
     private Date date_Created;
 
 //    @Column(name = "MATRIC_NO", unique = true, nullable = false)

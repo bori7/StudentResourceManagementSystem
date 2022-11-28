@@ -59,14 +59,13 @@ public class CourseManageServiceImpl implements CourseManageService {
         CourseManage courseManage ;
         CourseManageResponse courseManageResponse ;
 //        if(findRegNo.isEmpty()){
-            logger.info("Get her for non-existing student");
+            logger.info("Get here for non-existing student");
             for (int i = 0; i < noOfCourses; i++) {
                  courseManage = new CourseManage();
                  courseManageResponse = new CourseManageResponse();
                 List<CourseManage> existingCourses = courseManageRepository.findByCourseIdAndStudReg(courseRegisterRequest.getCourses().get(i), courseRegisterRequest.getJambNo());
                 courseManage.setStudReg(courseRegisterRequest.getJambNo());
                 courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
-
                 courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i)));
 
                 logger.info("Course ID: "+  courseRegisterRequest.getCourses().get(i));
@@ -157,8 +156,10 @@ public class CourseManageServiceImpl implements CourseManageService {
     @Override
     public Object getCoursebyDepartment(CoursesDisplayRequest coursesDisplayRequest) {
         Department department = departmentRepository.findByDeptName(coursesDisplayRequest.getDepartment_name());
+        logger.info("coursesDisplayRequest: " + coursesDisplayRequest);
+        logger.info("Department name: " + coursesDisplayRequest.getDepartment_name());
 
-        List<Courses> courses = courseRepository.findAllBydepartmentname(coursesDisplayRequest.getDepartment_name());
+        List<Courses> courses = courseRepository.findAllBydepartmentname(coursesDisplayRequest.getDepartment_name().toUpperCase());
         List<ViewCourse> CoursesDisplayResponse = new ArrayList<>();
         //boolean ans = courses.isEmpty();
         if(department==null){
@@ -215,15 +216,11 @@ public class CourseManageServiceImpl implements CourseManageService {
         }
         else{
 
-//            for (int i = 0; i < courseManage1.size(); i++){
-//
-//                CourseManage coursemanage = new CourseManage();
+
                 logger.info("Course ID: "+studentDeleteCourseRequest.getCourse_Id());
                 logger.info("RegNo: "+studentDeleteCourseRequest.getJambNo());
                 courseManageRepository.deleteBycourseId(studentDeleteCourseRequest.getCourse_Id(),studentDeleteCourseRequest.getJambNo());
-//                courseManageRepository.save(coursemanage);
 
-//            }
 
         return StudentDeleteCourseResponse.builder().message("Course Deleted").build();
         }
