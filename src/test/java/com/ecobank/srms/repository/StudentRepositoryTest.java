@@ -200,13 +200,13 @@ class StudentRepositoryTest {
 
     }
 
-    @AfterTest
-    void restore(){
-        studentRepository.deleteByJambNo("JambTest1023");
-        studentRepository.deleteByJambNo("JambTest1024");
-        studentRepository.deleteByJambNo("JambTest1025");
-        studentRepository.deleteByJambNo("JambTest1026");
-    }
+//    @AfterTest
+//    void restore(){
+//        studentRepository.deleteByJambNo("JambTest1023");
+//        studentRepository.deleteByJambNo("JambTest1024");
+//        studentRepository.deleteByJambNo("JambTest1025");
+//        studentRepository.deleteByJambNo("JambTest1026");
+//    }
 
     @Test
     void findAll() {
