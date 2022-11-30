@@ -74,7 +74,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         }
 
 
-        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
+        bioMedDataRequest.setPicture((uploadUri(bioMedDataRequest.getPicture())));
 
 
 
@@ -110,7 +110,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         }
 
 
-        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
+        bioMedDataRequest.setPicture((uploadUri(bioMedDataRequest.getPicture())));
 
 
 
@@ -136,7 +136,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
         bioMedDataRequest.setStudentId(bioMedData.getStudentId());
-        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
+        bioMedDataRequest.setPicture((uploadUri(bioMedDataRequest.getPicture())));
 
             logger.info("First_Name " + bioMedDataRequest.getfName());
             logger.info("Surname"+bioMedDataRequest.getSurName());

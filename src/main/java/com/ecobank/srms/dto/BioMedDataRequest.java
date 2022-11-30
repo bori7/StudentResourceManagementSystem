@@ -32,13 +32,13 @@ public class BioMedDataRequest {
     private String parEmail;
     private String parNO;
 
-    private StringBuilder picture;
+    private String picture;
 
-   public StringBuilder getPicture() {
+   public String getPicture() {
         return picture;
     }
 
-    public void setPicture(StringBuilder picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
