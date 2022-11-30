@@ -12,6 +12,8 @@ public interface BioMedDataService {
 
     BioMedDataResponse save(BioMedDataRequest bioMedDataRequest) throws IOException;
 
+    BioMedDataResponse saveHeroku(BioMedDataRequest bioMedDataRequest) throws IOException;
+
     BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException;
 
    ProfileResponse display(BioMedDataRequest bioMedDataRequest) throws Exception;

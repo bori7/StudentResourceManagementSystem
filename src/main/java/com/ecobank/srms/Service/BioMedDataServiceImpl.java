@@ -90,6 +90,42 @@ public class BioMedDataServiceImpl implements BioMedDataService {
             return BioMedDataResponse.builder().message("Thank you").build();
     }
 
+
+    @Override
+    public BioMedDataResponse saveHeroku(BioMedDataRequest bioMedDataRequest) throws IOException {
+        BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+
+
+        Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
+
+        if (student == null)
+            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+
+        if (!(bio == null))
+            return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
+
+
+        if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture().equals("")){
+            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+        }
+
+
+        bioMedDataRequest.setPicture(new StringBuilder(uploadUri(bioMedDataRequest.getPicture().toString())));
+
+
+
+        logger.info("First_Name " + bioMedDataRequest.getfName());
+        logger.info("Surname"+bioMedDataRequest.getSurName());
+        logger.info("Marital_status " +bioMedDataRequest.getmStatus());
+        logger.info("Marital_status " +bioMedDataRequest.getAge());
+        logger.info("Marital_status " +bioMedDataRequest.getAddress());
+
+
+        modelMapper.map(bioMedDataRequest, bioMedData);
+        bioMedDataRepository.save(bioMedData);
+        return BioMedDataResponse.builder().message("Thank you").build();
+    }
+
     public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
 
         bioMedData = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);

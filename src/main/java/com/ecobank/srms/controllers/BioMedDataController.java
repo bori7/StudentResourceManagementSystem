@@ -33,6 +33,13 @@ public class BioMedDataController {
 
         }
 
+
+        @PostMapping(value = "/save_Heroku_biodata")
+        public ResponseEntity saveHeroku(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
+                logger.info("biomedRequest : " +  bioMedDataRequest.getJambNo());
+                return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
+        }
+
         @PutMapping(value = "/update_biodata")
         public ResponseEntity update(@RequestBody  BioMedDataRequest bioMedDataRequest) throws IOException{
             return ResponseEntity.ok(bioMedDataService.update(bioMedDataRequest));
