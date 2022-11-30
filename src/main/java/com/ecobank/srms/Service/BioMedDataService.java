@@ -18,9 +18,14 @@ public interface BioMedDataService {
 
     File storeImage(MultipartFile img, String Filecat) throws IOException;
 
+    File CompressJpgImage(File input) throws IOException;
+
+    String uploadUri(String Uri) throws IOException;
+
     BioMedDataResponse upload(UploadPictureRequest uploadPictureRequest)throws IOException;
 
 
+    String getPic(String jambNo);
 
     DisplayPictureResponse displayPic(DisplayPictureRequest displayPictureRequest) throws IOException;
 

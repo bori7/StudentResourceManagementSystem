@@ -6,6 +6,7 @@ import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.model.ViewStudent;
 import com.ecobank.srms.repository.DepartmentRepository;
+import com.ecobank.srms.repository.IdVerificationRepository;
 import com.ecobank.srms.repository.StudentRepository;
 //import org.modelmapper.ModelMapper;
 import com.ecobank.srms.utils.Credentials;
@@ -51,6 +52,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    private IdVerificationRepository idVerificationRepository;
+
 
 
     @Autowired
@@ -72,7 +76,11 @@ public class StudentServiceImpl implements StudentService {
 
         boolean isPresent_email = studentRepository.findPersonByEmail(studentRequest.getEmail()).isPresent();
 
+        boolean isPresent_verify = idVerificationRepository.findByuserId(studentRequest.getJambNo()).isPresent();
+
         Department department = departmentRepository.findByDeptName(studentRequest.getDepartment());
+
+
 
 
         //Student isPresent = studentRepository.findByUserName(studentRequest.getUserName());
@@ -82,6 +90,9 @@ public class StudentServiceImpl implements StudentService {
 
         if ((isPresent_email))
             return StudentResponse.builder().message("This Email exists").build();
+
+        if(!(isPresent_verify))
+            return StudentResponse.builder().message("Access Not Granted, Contact Support").build();
 
         if ((department==null)){
             return StudentResponse.builder().message(
@@ -323,6 +334,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public AdminStudentGeneralResponse ShowCountNewStudents() {
+
        Long newStudent = studentRepository.findNewStudentByGivenDate();
 
        return AdminStudentGeneralResponse.builder()
@@ -335,7 +347,6 @@ public class StudentServiceImpl implements StudentService {
 
     public AdminStudentGeneralResponse ShowCountOldStudents() {
         Long newStudent = studentRepository.findOldStudentByGivenDate();
-
         return AdminStudentGeneralResponse.builder()
                 .code("00")
                 .count(newStudent)

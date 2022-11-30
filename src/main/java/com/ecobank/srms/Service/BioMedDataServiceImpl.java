@@ -12,7 +12,6 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -170,6 +169,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         return dest;
     }
 
+    @Override
     public File CompressJpgImage(File input) throws IOException {
         String basePath = System.getProperty("user.dir");
         BufferedImage image = ImageIO.read(input);
@@ -186,6 +186,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
          }
 
 
+         @Override
     public String uploadUri(String Uri) throws IOException{
         MultipartFile image = ImageTrans.base64ToMultipart(Uri);
         String picture;
@@ -219,6 +220,7 @@ public class BioMedDataServiceImpl implements BioMedDataService {
                     .build();
     }
 
+    @Override
     public String getPic(String jambNo){
         String url = null;
         Optional<BioMedData> bioMedData1 = bioMedDataRepository.findByJambNo(jambNo);

@@ -2,10 +2,7 @@ package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
 import com.ecobank.srms.model.*;
-import com.ecobank.srms.repository.AdminRepository;
-import com.ecobank.srms.repository.CourseRepository;
-import com.ecobank.srms.repository.DepartmentRepository;
-import com.ecobank.srms.repository.StudentRepository;
+import com.ecobank.srms.repository.*;
 import com.ecobank.srms.utils.Token;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
@@ -49,11 +46,20 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     CourseManageServiceImpl courseManageService;
 
+    @Autowired
+    IdVerificationRepository idVerificationRepository;
+
     Logger logger = Logger.getLogger(AdminServiceImpl.class.getName());
 
     @Override
     public AdminRegisterResponse register(AdminRegisterRequest adminRegisterRequest) throws IOException {
+
+        boolean isPresent_verify = idVerificationRepository.findByuserId(adminRegisterRequest.getUsername()).isPresent();
+
         boolean isPresentUsername = adminRepository.findByUsername(adminRegisterRequest.getUsername()).isPresent();
+
+        if(!(isPresent_verify))
+            return AdminRegisterResponse.builder().message("Access Not Granted, Contact Support").build();
 
 
         if (isPresentUsername) {
