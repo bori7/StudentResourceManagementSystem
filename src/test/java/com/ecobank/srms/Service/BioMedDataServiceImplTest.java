@@ -61,7 +61,7 @@ class BioMedDataServiceImplTest {
         bioMedDataRequest.setParName("JambTestParName");
         bioMedDataRequest.setParNO("0902302920221");
         bioMedDataRequest.setPhoneNo("09092301923");
-        bioMedDataRequest.setPicture(new StringBuilder(sValue));
+        bioMedDataRequest.setPicture((sValue));
         bioMedDataRequest.setReligion("Aethist");
         bioMedDataRequest.setSex("Male");
         bioMedDataRequest.setStOfOrg("JambTestOrigin");
@@ -106,7 +106,7 @@ class BioMedDataServiceImplTest {
         bioMedDataRequest.setSex("Male");
         bioMedDataRequest.setStOfOrg("JambTestOrigin");
         bioMedDataRequest.setSurName("JambTestSurname");
-        bioMedDataRequest.setPicture(new StringBuilder(sValue));
+        bioMedDataRequest.setPicture((sValue));
 
         BioMedDataResponse bioMedDataResponse_actual = bioMedDataService.update(bioMedDataRequest);
 
