@@ -31,6 +31,8 @@ public class BioMedDataController {
                 logger.info("biomedRequest : " +  bioMedDataRequest.getJambNo());
             return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
 
+            
+
 
         }
 
