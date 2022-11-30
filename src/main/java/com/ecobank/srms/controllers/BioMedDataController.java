@@ -30,10 +30,6 @@ public class BioMedDataController {
         public ResponseEntity save(@RequestBody BioMedDataRequest bioMedDataRequest) throws IOException{
                 logger.info("biomedRequest : " +  bioMedDataRequest.getJambNo());
             return ResponseEntity.ok(bioMedDataService.save(bioMedDataRequest));
-
-            
-
-
         }
 
 
@@ -50,6 +46,11 @@ public class BioMedDataController {
 
         @PostMapping(value = "/profile")
         public ResponseEntity displayProfile(@RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
+                return ResponseEntity.ok(bioMedDataService.display(bioMedDataRequest));
+        }
+
+        @PostMapping(value = "/profile2")
+        public ResponseEntity displayProfile2(@RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
                 return ResponseEntity.ok(bioMedDataService.display(bioMedDataRequest));
         }
 
