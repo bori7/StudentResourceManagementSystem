@@ -91,8 +91,8 @@ public class StudentServiceImpl implements StudentService {
         if ((isPresent_email))
             return StudentResponse.builder().message("This Email exists").build();
 
-        if(!(isPresent_verify))
-            return StudentResponse.builder().message("Access Not Granted, Contact Support").build();
+//        if(!(isPresent_verify))
+//            return StudentResponse.builder().message("Access Not Granted, Contact Support").build();
 
         if ((department==null)){
             return StudentResponse.builder().message(
@@ -138,7 +138,6 @@ public class StudentServiceImpl implements StudentService {
                         .department(studentRequest.getDepartment().toUpperCase())
                         .build();
 
-
         }
 
 
@@ -146,7 +145,6 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponse Login(LoginRequest loginRequest) throws IOException {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Student student;
-
 
 
 
@@ -206,7 +204,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
 
-
+@Override
     public Token extractToken(HttpServletRequest httpServletRequest) {
 
         Token token = new Token();

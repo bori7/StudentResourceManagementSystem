@@ -195,7 +195,5 @@ class StudentControllerTest {
         String actual = response.getBody();
         System.out.println(actual);
         assertTrue(actual.contains("Password successfully Reset"));
-
-
     }
 }

@@ -4,6 +4,7 @@ import com.ecobank.srms.SrmsApplication;
 import com.ecobank.srms.dto.*;
 import com.ecobank.srms.model.BioMedData;
 import com.ecobank.srms.repository.BioMedDataRepository;
+import com.ecobank.srms.utils.ImageTrans;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -155,13 +154,22 @@ class BioMedDataServiceImplTest {
     }
 
     @Test
-    void storeImage() {
-
-
+    void storeImage() throws IOException {
+        InputStream input = new FileInputStream("src/main/resources/config.properties");
+        Properties prop = new Properties();
+        prop.load(input);
+        String sValue = prop.getProperty("base64String");
+        MultipartFile image = ImageTrans.base64ToMultipart(sValue);
+        File file = bioMedDataService.storeImage(image,"biopic" );
+        System.out.println("Hello hello" + file);
+        Assert.assertEquals(file.getName(),"biopic.jpg");
     }
 
     @Test
     void compressJpgImage() throws IOException {
+        File myObj = new File("uploads/biopic.png");
+       File return_file = bioMedDataService.CompressJpgImage(myObj);
+       Assert.assertNotNull(return_file);
 
     }
 

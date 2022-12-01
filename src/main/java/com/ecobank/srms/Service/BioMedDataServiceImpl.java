@@ -228,6 +228,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         String picture;
         File file = storeImage(image,"biopic" );
         file = CompressJpgImage(file);
+        long fileSize = file.length();
+
+        System.out.format("The size of the file: %d bytes", fileSize);
         Map uploadResult = cloudinary.uploader().upload(file,ObjectUtils.emptyMap());
         picture = String.valueOf(uploadResult.get("url"));
         return picture;

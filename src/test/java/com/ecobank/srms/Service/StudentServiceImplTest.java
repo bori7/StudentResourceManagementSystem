@@ -5,6 +5,7 @@ import com.ecobank.srms.dto.*;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.StudentRepository;
 import com.ecobank.srms.utils.JwtUtils;
+import com.ecobank.srms.utils.Token;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -118,6 +119,8 @@ class StudentServiceImplTest {
 
     @Test
     void extractToken() {
+       Token token =  studentService.extractToken(httpServletRequest);
+       Assert.assertNotNull(token.getAccessToken());
 
     }
 
