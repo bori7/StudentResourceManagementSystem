@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
-    private String globaltoken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxZGZzeXJ0aXlqdHlmZHJydHlmaHI1dWk3eXRqaCIsImlzcyI6IkFueXRoaW5nIiwiZXhwIjoxNjY5MTIzMjYxfQ.fc_tND9STtAPSwwmpuIVpOS8NcA1raus5CUeonvgXtL_aDXvwa6hEDhi9OIzCuxNmXlnMoSE9qjkfx8AoOroAQ";
+    private String globaltoken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxZGZzeXJ0aXlqdHlmZHJydHlmaHI1dWk3eXRqaCIsImlzcyI6IkFueXRoaW5nIiwiZXhwIjoxNjY5OTgyMTg2fQ.7wEF1eXxixWdKwdF_3wboDbjSHeD4v88YSfS7roHaZtbPcbN6-9cxxg3w9n4fgtinKQB4pS-4JdM8Q6dSUWq_g";
 
 
     @Autowired
@@ -69,7 +69,8 @@ class AdminControllerTest {
 
         String actual = response.getBody();
         System.out.println(actual);
-        assertTrue(actual.contains("This Username Already Exists"));
+        //assertTrue(actual.contains("This Username Already Exists"));
+        Assert.assertEquals(response.getStatusCodeValue(),201);
     }
 
     @Test
@@ -174,6 +175,7 @@ class AdminControllerTest {
 
         String actual = response.getBody();
         assertTrue(actual.contains("Course has been created"));
+        Assert.assertEquals(response.getStatusCodeValue(),201);
     }
 
     @Test
@@ -195,7 +197,9 @@ class AdminControllerTest {
         System.out.println(obj);
 
         String actual = response.getBody();
+
         assertTrue(actual.contains("Department has been created"));
+        Assert.assertEquals(response.getStatusCodeValue(),201);
 
     }
 
@@ -226,6 +230,7 @@ class AdminControllerTest {
 
         String actual = response.getBody();
         assertTrue(actual.contains("New Student Created"));
+        Assert.assertEquals(response.getStatusCodeValue(),201);
 
     }
 

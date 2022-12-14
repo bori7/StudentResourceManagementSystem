@@ -4,34 +4,84 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.*;
+
 @Data
 @NoArgsConstructor
 public class BioMedDataRequest {
 
     private Long studentId;
+
+    @NotNull(message = "fName cannot be null")
     private String fName;
+
+    @NotNull(message = "fName cannot be null")
     private String surName;
+
     private String midName;
+    @NotNull(message = "JambNo cannot be null")
+    @Size(min = 4,message = "jambNo must be more than 4")
     private String jambNo;
+
+    @NotNull(message = "Date Of Birth cannot be null")
+    @Pattern(regexp = "^\\d{4}/\\d{2}/\\d{2}$",message = "Date Format Not appropriate, must be YYYY/MM/DD")
     private String dateOfBirth;
+
+    @NotNull(message = "age cannot be null")
     private String age;
+    @NotNull(message = "sex cannot be null")
     private String sex;
+
+    @NotNull(message = "Marital Status cannot be null")
     private String mStatus;
+
+    @NotNull(message = "Department cannot be null")
     private String department;
+
+    @NotNull(message = "faculty cannot be null")
     private String faculty;
+
+    @NotNull(message = "address cannot be null")
     private String address;
+    @Email
     private String email;
+
+
+    @NotNull(message = "Phone Number cannot be null")
+    @Pattern(regexp = "^\\+?\\d+$",message = "Number must be more than 1")
+    @Size(min=10, max=16, message = "Number must be more than 10 and less than 16")
     private String phoneNo;
+
+    @NotNull(message = "faculty cannot be null")
     private String nationality;
+
+    @NotNull(message = "Religion cannot be null")
     private String religion;
+
+    @NotNull(message = "State of Origin cannot be null")
     private String stOfOrg;
+
+    @NotNull(message = "Local Government Area cannot be null")
     private String lga;
+
+    @NotNull(message = "Parent Name cannot be null")
     private String parName;
+
+    @NotNull(message = "Parent Occupation cannot be null")
     private String occName;
+
+    @NotNull(message = "Parent Address cannot be null")
     private String parAdd;
+
+    @Email
     private String parEmail;
+
+    @Pattern(regexp = "^\\+?\\d+$",message = "Number must be more than 1")
+    @Size(min=10, max=16)
+    @NotNull(message = "Parent Phone Number cannot be null")
     private String parNO;
 
+    @NotNull(message = "Picture cannot be null")
     private String picture;
 
    public String getPicture() {

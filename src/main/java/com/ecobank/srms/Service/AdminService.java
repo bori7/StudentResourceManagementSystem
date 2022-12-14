@@ -22,7 +22,11 @@ public interface AdminService {
 
     Object displayStudDept(AdminFindStudentRequest adminFindStudentRequest);
 
+    Object displayStudDept(String deptName);
+
     AdminFindStudentLevelResponse displayStudLevel(AdminFindStudentLevelRequest adminFindStudentLevelRequest);
+
+    AdminFindStudentLevelResponse displayStudLevel(String level);
 
     AdminChangePasswordResponse changePassword(AdminChangePasswordRequest adminChangePasswordRequest);
 }

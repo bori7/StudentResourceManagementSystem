@@ -17,5 +17,7 @@ public interface DepartmentService {
 
     Object displaycountStudDept(AdminCountStudDeptRequest adminCountStudDeptRequest);
 
+    Object displaycountStudDept(String deptName);
+
 
 }

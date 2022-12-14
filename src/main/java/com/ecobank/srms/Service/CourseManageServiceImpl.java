@@ -1,6 +1,7 @@
 package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.CourseManage;
 import com.ecobank.srms.model.Courses;
 import com.ecobank.srms.model.Department;
@@ -8,8 +9,10 @@ import com.ecobank.srms.model.ViewCourse;
 import com.ecobank.srms.repository.CourseManageRepository;
 import com.ecobank.srms.repository.CourseRepository;
 import com.ecobank.srms.repository.DepartmentRepository;
+import com.ecobank.srms.utils.ResponseCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,6 +44,7 @@ public class CourseManageServiceImpl implements CourseManageService {
         Courses courses = courseRepository.findByCourseId(Id);
         if (courses == null) {
             logger.info("The course doesnt exist");
+            return "The course doesnt exist";
         } else {
             courseName = courses.getNameOfCourse();
         }
@@ -68,15 +72,26 @@ public class CourseManageServiceImpl implements CourseManageService {
                 courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
                 courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i)));
 
+               Courses courses =  courseRepository.findByCourseId(courseRegisterRequest.getCourses().get(i));
+               if (courses == null)
+               {
+                   throw new GenericException(ResponseCodes.NOT_FOUND," course with ID: " + courseRegisterRequest.getCourses().get(i) + " Does not exist", HttpStatus.NOT_FOUND);
+
+               }
                 logger.info("Course ID: "+  courseRegisterRequest.getCourses().get(i));
 
                 if (existingCourses.isEmpty()){
                     courseManageRepository.save(courseManage);
                     courseManageResponse.setResp_code("00");
                     courseManageResponse.setResp_msg("Course Saved");
-                }else{
+                }
+
+                else{
+//                    throw new GenericException(ResponseCodes.ALREADY_EXIST, "Course " + getCourseName(courseRegisterRequest.getCourses().get(i)) + " has already been registered", HttpStatus.BAD_REQUEST);
+
                     courseManageResponse.setResp_code("99");
                     courseManageResponse.setResp_msg("Course " + getCourseName(courseRegisterRequest.getCourses().get(i)) + " has already been registered");
+//
                 }
 
                 courseManageResponse.setData(courseManage);
@@ -84,34 +99,7 @@ public class CourseManageServiceImpl implements CourseManageService {
                 logger.info("Course Manage Resp: "+  courseManageResponses);
 
             }
-//        }
-//        else{
-//            logger.info("Get her for existing student");
-//        for (int i = 0; i < noOfCourses; i++) {
-//            CourseManage courseManage = new CourseManage();
-//            courseManage.setCourseManageId(courseManage.getCourseManageId());
-//            courseManage.setStudReg(courseRegisterRequest.getJambNo());
-//            courseManage.setCourse_Id(courseRegisterRequest.getCourses().get(i));
-//            courseManage.setCourse_Name(getCourseName(courseRegisterRequest.getCourses().get(i))); courseManageRepository.save(courseManage);
-//
-//            logger.info("I am currently in this here " + courseManage);
-//                if(findRegNo.get(i).equals(courseManage)){
-//                    logger.info("I am currently here"+courseManage);
-//                courseManageResponse.setResp_code("99");
-//                courseManageResponse.setResp_msg("Course " + courseRegisterRequest.getCourses().get(i) + "Has already been registered");
-//                courseManageResponses.add(courseManageResponse);
-//                    continue;
-//            } else {
-//                logger.info("Hello");
-//                courseManageResponse.setResp_code("00");
-//                courseManageResponse.setResp_msg("Course Saved");
-//                courseManageResponse.setData(courseManage);
-//                courseManageResponses.add(courseManageResponse);
-//
-//            }}
 
-
-//        }
 
 
         return courseManageResponses;
@@ -123,13 +111,34 @@ public class CourseManageServiceImpl implements CourseManageService {
         List<CourseManage> courseManage = courseManageRepository.findByStudReg(viewCoursesRequest.getRegNo());
         List<ViewCourse> viewCoursesResponses = new ArrayList<>();
         if (courseManage == null || courseManage.isEmpty()) {
-            return "The student has not registered for a course";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The student has not registered for a course", HttpStatus.NOT_FOUND);
 
         } else {
             for (int i = 0; i < courseManage.size(); i++) {
                 ViewCourse viewCourse = new ViewCourse();
                 Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourse_Id());
+                viewCourse.setCourseId(courses.getCourseId());
+                viewCourse.setCourseCode(courses.getCourse_code());
+                viewCourse.setCourseName(courses.getNameOfCourse());
+                viewCourse.setStatus(courses.getStatus_course());
+                viewCourse.setUnit(courses.getUnit_of_course());
+                viewCoursesResponses.add(viewCourse);
+            }
+            return viewCoursesResponses;
+        }
+    }
 
+    @Override
+    public Object view(String regNo) throws Exception {
+        List<CourseManage> courseManage = courseManageRepository.findByStudReg(regNo);
+        List<ViewCourse> viewCoursesResponses = new ArrayList<>();
+        if (courseManage == null || courseManage.isEmpty()) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The student has not registered for a course", HttpStatus.NOT_FOUND);
+
+        } else {
+            for (int i = 0; i < courseManage.size(); i++) {
+                ViewCourse viewCourse = new ViewCourse();
+                Courses courses = courseRepository.findByCourseId(courseManage.get(i).getCourse_Id());
                 viewCourse.setCourseId(courses.getCourseId());
                 viewCourse.setCourseCode(courses.getCourse_code());
                 viewCourse.setCourseName(courses.getNameOfCourse());
@@ -146,7 +155,9 @@ public class CourseManageServiceImpl implements CourseManageService {
         Courses course = new Courses();
         Courses course1 = courseRepository.findAllByNameOfCourse(courseName);
         if (course1 == null) {
+
             logger.info("The course doesnt exist");
+
         } else {
             course = course1;
         }
@@ -163,19 +174,22 @@ public class CourseManageServiceImpl implements CourseManageService {
         List<ViewCourse> CoursesDisplayResponse = new ArrayList<>();
         //boolean ans = courses.isEmpty();
         if(department==null){
-            return "The Department does not exist";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not exist", HttpStatus.NOT_FOUND);
+
+//            return "The Department does not exist";
 
         }
 
         if (courses.isEmpty()) {
-            return "The Department does not have any courses";
+
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not have any courses", HttpStatus.NOT_FOUND);
+
+//            return "The Department does not have any courses";
         }
 
 
 
-//        if(courses == ){
-//            return "The Department does not have any courses available";
-//        }
+
         else {
             for (int i = 0; i < courses.size(); i++) {
                 ViewCourse viewCourse = new ViewCourse();
@@ -196,6 +210,50 @@ public class CourseManageServiceImpl implements CourseManageService {
 
     }
 
+    @Override
+    public Object getCoursebyDepartment(String department_name) {
+        Department department = departmentRepository.findByDeptName(department_name);
+        logger.info("coursesDisplayRequest: " + department_name);
+        logger.info("Department name: " + department_name);
+
+        List<Courses> courses = courseRepository.findAllBydepartmentname(department_name.toUpperCase());
+        List<ViewCourse> CoursesDisplayResponse = new ArrayList<>();
+        //boolean ans = courses.isEmpty();
+        if(department==null){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not exist", HttpStatus.NOT_FOUND);
+
+//            return "The Department does not exist";
+
+        }
+
+        if (courses.isEmpty()) {
+
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not have any courses", HttpStatus.NOT_FOUND);
+
+//            return "The Department does not have any courses";
+        }
+
+
+
+
+        else {
+            for (int i = 0; i < courses.size(); i++) {
+                ViewCourse viewCourse = new ViewCourse();
+                Courses courses1 = courseRepository.findByCourseId(courses.get(i).getCourseId());
+
+                viewCourse.setCourseId(courses1.getCourseId());
+                viewCourse.setCourseCode(courses1.getCourse_code());
+                viewCourse.setCourseName(courses1.getNameOfCourse());
+                viewCourse.setStatus(courses1.getStatus_course());
+                viewCourse.setUnit(courses1.getUnit_of_course());
+                viewCourse.setCourseDesc(courses1.getCourse_Descr());
+                CoursesDisplayResponse.add(viewCourse);
+            }
+
+            return CoursesDisplayResponse;
+        }
+
+    }
 
 
     @Override
@@ -208,11 +266,15 @@ public class CourseManageServiceImpl implements CourseManageService {
         logger.info("regNO:" + findRegNoAndStud);
 
         if (courseManage1 == null || courseManage1.isEmpty()) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Student hasn't registered for any course", HttpStatus.NOT_FOUND);
 
-            return StudentDeleteCourseResponse.builder().message("The Student hasn't registered for any course").build();
+//            return StudentDeleteCourseResponse.builder().message("The Student hasn't registered for any course").build();
         }
         if (findRegNoAndStud == null || findRegNoAndStud.isEmpty()){
-            return StudentDeleteCourseResponse.builder().message("The student hasn't registered for this course").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Student hasn't registered for any course", HttpStatus.NOT_FOUND);
+
+
+//            return StudentDeleteCourseResponse.builder().message("The student hasn't registered for this course").build();
         }
         else{
 

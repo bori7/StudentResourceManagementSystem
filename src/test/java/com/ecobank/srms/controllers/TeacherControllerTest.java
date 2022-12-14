@@ -78,7 +78,8 @@ class TeacherControllerTest {
 
         assertTrue(teacherActual.contains(teacherExpected));
 
-//        Assert.assertEquals(teacherActual,teacherExpected);
+        Assert.assertEquals(response.getStatusCodeValue(),201);
+
     }
 
 

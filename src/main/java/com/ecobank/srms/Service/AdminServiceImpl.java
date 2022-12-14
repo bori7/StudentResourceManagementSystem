@@ -1,12 +1,15 @@
 package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.*;
 import com.ecobank.srms.repository.*;
+import com.ecobank.srms.utils.ResponseCodes;
 import com.ecobank.srms.utils.Token;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,16 +62,24 @@ public class AdminServiceImpl implements AdminService {
         boolean isPresentUsername = adminRepository.findByUsername(adminRegisterRequest.getUsername()).isPresent();
 
         if(!(isPresent_verify))
-            return AdminRegisterResponse.builder().message("Access Not Granted, Contact Support").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Access Not Granted, Contact Support", HttpStatus.NOT_FOUND);
+
+        //return AdminRegisterResponse.builder().message("Access Not Granted, Contact Support").build();
 
 
         if (isPresentUsername) {
-            return AdminRegisterResponse.builder().message("This Username Already Exists").build();
+
+
+           throw new GenericException(ResponseCodes.ALREADY_EXIST, "This Username Already Exists", HttpStatus.BAD_REQUEST);
+
+           // return AdminRegisterResponse.builder().message("This Username Already Exists").build();
         } else {
             String password = adminRegisterRequest.getPassword();
             String confirmPassword = adminRegisterRequest.getConfirmPassword();
             if (!(password.equals(confirmPassword))) {
-                return AdminRegisterResponse.builder().message("Password must match confirm Password").build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match confirm Password", HttpStatus.UNAUTHORIZED);
+
+               // return AdminRegisterResponse.builder().message("Password must match confirm Password").build();
             } else {
                 Admin admin = new Admin();
                 ModelMapper modelMapper = new ModelMapper();
@@ -98,11 +109,15 @@ public class AdminServiceImpl implements AdminService {
         Token token = new Token();
 
         if (!(isPresent)) {
-            return AdminLoginResponse.builder().message("The User Doesn't exist").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The User Doesn't exist", HttpStatus.NOT_FOUND);
+
+            //return AdminLoginResponse.builder().message("The User Doesn't exist").build();
 
         } else {
             if (!passwordEncoder.matches(adminLoginRequest.getPassword(), admin.getPassword())) {
-                return AdminLoginResponse.builder().message("Incorrect Password").build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Incorrect Password", HttpStatus.UNAUTHORIZED);
+
+               // return AdminLoginResponse.builder().message("Incorrect Password").build();
             }
         }
         token = studentService.extractToken(httpServletRequest);
@@ -123,17 +138,21 @@ public class AdminServiceImpl implements AdminService {
 
 
         if (currentAdmin == null) {
-            return new ResetPasswordResponse("Please Register, User does not exist");
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please Register, User does not exist", HttpStatus.NOT_FOUND);
+
         } else {
             if (passwordEncoder.matches(newPassword, currentAdmin.getPassword())) {
-                return ResetPasswordResponse.builder().message("Old password cannot be the same as new password").build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Old password cannot be the same as new password", HttpStatus.UNAUTHORIZED);
+
             } else {
                 if (confirmPassword.equals(newPassword)) {
                     currentAdmin.setPassword(passwordEncoder.encode(newPassword));
                     adminRepository.save(currentAdmin);
                     return ResetPasswordResponse.builder().message("Password successfully Reset").build();
                 } else {
-                    return ResetPasswordResponse.builder().message("password must match").build();
+                    throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match", HttpStatus.UNAUTHORIZED);
+
+//                    return ResetPasswordResponse.builder().message("password must match").build();
                 }
             }
         }
@@ -148,11 +167,16 @@ public class AdminServiceImpl implements AdminService {
 
 
         if (!(courses_name == null)) {
-            return AdminCreateCourseResponse.builder().message("This course exists already").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "This course exists already", HttpStatus.BAD_REQUEST);
+
+
+           // return AdminCreateCourseResponse.builder().message("This course exists already").build();
         }
 
         if(department==null){
-            return AdminCreateCourseResponse.builder().message("This department does not exist").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "This department does not exist", HttpStatus.NOT_FOUND);
+
+           // return AdminCreateCourseResponse.builder().message("This department does not exist").build();
         }
 
 
@@ -182,7 +206,9 @@ public class AdminServiceImpl implements AdminService {
         Department department_name = departmentRepository.findByDeptName(adminCreateDepartmentRequest.getDeptName());
 
         if (!(department_name == null)) {
-            return AdminCreateDepartmentResponse.builder().message("Department Already Exists").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "Department Already Exists", HttpStatus.BAD_REQUEST);
+
+            //return AdminCreateDepartmentResponse.builder().message("Department Already Exists").build();
         } else {
             Department department = new Department();
             ModelMapper modelMapper = new ModelMapper();
@@ -211,15 +237,24 @@ public class AdminServiceImpl implements AdminService {
         logger.info("dept id"+adminCreateStudentRequest.getDept_id());
 
         if (!(student_jambNo==null)){
-            return AdminCreateStudentResponse.builder().message("Student already Exists").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "Student already Exists" , HttpStatus.BAD_REQUEST);
+
+
+           // return AdminCreateStudentResponse.builder().message("Student already Exists").build();
         }
 
         if(isPresent_email){
-            return AdminCreateStudentResponse.builder().message("Email Already Exists").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "This Email exists", HttpStatus.BAD_REQUEST);
+
+
+           // return AdminCreateStudentResponse.builder().message("Email Already Exists").build();
         }
 
         if (department==null){
-            return AdminCreateStudentResponse.builder().message("Department Does not Exist").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Department Does not Exist", HttpStatus.NOT_FOUND);
+
+
+            //return AdminCreateStudentResponse.builder().message("Department Does not Exist").build();
         }
 
         logger.info("jambNo"+adminCreateStudentRequest.getJambNo());
@@ -256,13 +291,46 @@ public class AdminServiceImpl implements AdminService {
         List <Student> student = studentRepository.findByDepartment(adminFindStudentRequest.getDeptName());
 
         if(department==null){
-            return "There is no department with that Name";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no department with that Name", HttpStatus.NOT_FOUND);
+
+            //return "There is no department with that Name";
         }
 
         List<Object> studView = new ArrayList<>();
 
         if (student.isEmpty()) {
-            return "There is no student under the department";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no student under the department", HttpStatus.NOT_FOUND);
+
+
+           // return "There is no student under the department";
+        }
+
+        else{
+            for (int i = 0; i < student.size(); i++){
+                studView.add(student.get(i));
+            }
+            return studView;
+        }
+    }
+
+
+    public Object displayStudDept(String deptName) {
+        Department department = departmentRepository.findByDeptName(deptName);
+        List <Student> student = studentRepository.findByDepartment(deptName);
+
+        if(department==null){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no department with that Name", HttpStatus.NOT_FOUND);
+
+            //return "There is no department with that Name";
+        }
+
+        List<Object> studView = new ArrayList<>();
+
+        if (student.isEmpty()) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no student under the department", HttpStatus.NOT_FOUND);
+
+
+            // return "There is no student under the department";
         }
 
         else{
@@ -278,9 +346,12 @@ public class AdminServiceImpl implements AdminService {
         List <Student> student = studentRepository.findByLevel(adminFindStudentLevelRequest.getLevel());
         List<Object> studView = new ArrayList<>();
         if (student.isEmpty()) {
-            return AdminFindStudentLevelResponse.builder()
-                    .message("There are no students with that Level")
-                    .build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students with that Level", HttpStatus.NOT_FOUND);
+
+
+//            return AdminFindStudentLevelResponse.builder()
+//                    .message("There are no students with that Level")
+//                    .build();
         }
         else{
             for (int i = 0; i < student.size(); i++){
@@ -302,6 +373,32 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public AdminFindStudentLevelResponse displayStudLevel(String level) {
+        List <Student> student = studentRepository.findByLevel(level);
+        List<Object> studView = new ArrayList<>();
+        if (student.isEmpty()) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students with that Level", HttpStatus.NOT_FOUND);
+
+        }
+        else{
+            for (int i = 0; i < student.size(); i++){
+                ViewStudent viewStudent = new ViewStudent();
+                viewStudent.setJambNo(student.get(i).getJambNo());
+                viewStudent.setLevel(student.get(i).getLevel());
+                viewStudent.setDepartment(student.get(i).getDepartment());
+                viewStudent.setDate_Created(student.get(i).getDate_Created());
+                viewStudent.setEmail(student.get(i).getEmail());
+                studView.add(viewStudent);
+            }
+            return AdminFindStudentLevelResponse.builder()
+                    .response("There are the students with Level :" + level)
+                    .message("Successful")
+                    .data(studView)
+                    .build();
+        }
+    }
+
+    @Override
     public AdminChangePasswordResponse changePassword(AdminChangePasswordRequest adminChangePasswordRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boolean iscurrentAdmin = adminRepository.findByUsername(adminChangePasswordRequest.getUsername()).isPresent();
@@ -311,24 +408,33 @@ public class AdminServiceImpl implements AdminService {
         String confirmPassword = adminChangePasswordRequest.getConfirmPassword();
 
         if (!(iscurrentAdmin)) {
-            return AdminChangePasswordResponse.builder()
-                    .message(adminChangePasswordRequest.getUsername() + " Does not exist, please register ")
-                    .code("99")
-                    .build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, adminChangePasswordRequest.getUsername() + " Does not exist, please register", HttpStatus.NOT_FOUND);
+
+//
+//            return AdminChangePasswordResponse.builder()
+//                    .message(adminChangePasswordRequest.getUsername() + " Does not exist, please register ")
+//                    .code("99")
+//                    .build();
         } else {
             Admin currentAdmin = adminRepository.findByUsername(adminChangePasswordRequest.getUsername()).get();
             if (passwordEncoder.matches(newPassword, currentAdmin.getPassword())) {
-                return AdminChangePasswordResponse.builder()
-                        .code("99")
-                        .message("Old password cannot be the same as new password")
-                        .build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Old password cannot be the same as new password", HttpStatus.UNAUTHORIZED);
+
+//
+//                return AdminChangePasswordResponse.builder()
+//                        .code("99")
+//                        .message("Old password cannot be the same as new password")
+//                        .build();
             }
 
             if(!(passwordEncoder.matches(currentPassword,currentAdmin.getPassword()))){
-                return AdminChangePasswordResponse.builder()
-                        .code("99")
-                        .message("password is incorrect, please enter original password")
-                        .build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "password is incorrect, please enter original password", HttpStatus.UNAUTHORIZED);
+
+
+//                return AdminChangePasswordResponse.builder()
+//                        .code("99")
+//                        .message("password is incorrect, please enter original password")
+//                        .build();
             }
 
 
@@ -343,10 +449,12 @@ public class AdminServiceImpl implements AdminService {
                             .username(adminChangePasswordRequest.getUsername())
                             .build();
                 } else {
-                    return AdminChangePasswordResponse.builder()
-                            .message("Password must match")
-                            .code("99")
-                            .build();
+//
+                    throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match" , HttpStatus.UNAUTHORIZED);
+//                    return AdminChangePasswordResponse.builder()
+//                            .message("Password must match")
+//                            .code("99")
+//                            .build();
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
 import com.ecobank.srms.encryption.EncryptionService;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.model.ViewStudent;
@@ -11,10 +12,12 @@ import com.ecobank.srms.repository.StudentRepository;
 //import org.modelmapper.ModelMapper;
 import com.ecobank.srms.utils.Credentials;
 import com.ecobank.srms.utils.JwtUtils;
+import com.ecobank.srms.utils.ResponseCodes;
 import com.ecobank.srms.utils.Token;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -86,18 +89,27 @@ public class StudentServiceImpl implements StudentService {
         //Student isPresent = studentRepository.findByUserName(studentRequest.getUserName());
 
         if ((isPresent))
-            return StudentResponse.builder().message("This registration exists please sign in").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "This registration exists please sign in", HttpStatus.BAD_REQUEST);
+
+//        return StudentResponse.builder().message("This registration exists please sign in").build();
 
         if ((isPresent_email))
-            return StudentResponse.builder().message("This Email exists").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "This Email exists", HttpStatus.BAD_REQUEST);
+
+        //return StudentResponse.builder().message("This Email exists").build();
 
 //        if(!(isPresent_verify))
-//            return StudentResponse.builder().message("Access Not Granted, Contact Support").build();
+      //  throw new GenericException(ResponseCodes.NOT_FOUND, "Access Not Granted, Contact Support", HttpStatus.NOT_FOUND);
+
+
 
         if ((department==null)){
-            return StudentResponse.builder().message(
-                    "This Department has not been created/ does not exist"
-            ).build();
+
+            throw new GenericException(ResponseCodes.NOT_FOUND, "This Department has not been created/ does not exist", HttpStatus.NOT_FOUND);
+
+            //            return StudentResponse.builder().message(
+//                    "This Department has not been created/ does not exist"
+//            ).build();
         }
         //return "The Registration `number is existing, please sign in";
 
@@ -110,7 +122,9 @@ public class StudentServiceImpl implements StudentService {
             String confirmPassword = studentRequest.getConfirmPassword();
             logger.info("Confirm password" + studentRequest.getConfirmPassword());
             if (!(Password.equals(confirmPassword))){
-                return StudentResponse.builder().message("Password must match confirm Password").build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match confirm Password", HttpStatus.UNAUTHORIZED);
+
+                //return StudentResponse.builder().message("Password must match confirm Password").build();
             }
                 BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
                 final String encodedPassword = bcryptPasswordEncoder.encode(studentRequest.getPassword());
@@ -143,6 +157,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse Login(LoginRequest loginRequest) throws IOException {
+
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Student student;
 
@@ -151,10 +167,14 @@ public class StudentServiceImpl implements StudentService {
         Token token;
         student = studentRepository.findByJambNo(loginRequest.getJambNo());
         if (student == null) {
-            return StudentResponse.builder().message("The User Doesn't exist").build();
+
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The User Doesn't exist", HttpStatus.NOT_FOUND);
+           // return StudentResponse.builder().message("The User Doesn't exist").build();
         } else {
             if (!passwordEncoder.matches(loginRequest.getPassword(), student.getPassword())) {
-                return StudentResponse.builder().message("Incorrect Password").build();
+
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Incorrect Password", HttpStatus.UNAUTHORIZED);
+                //return StudentResponse.builder().message("Incorrect Password").build();
             } else {
                 token = extractToken(httpServletRequest);
 
@@ -180,15 +200,21 @@ public class StudentServiceImpl implements StudentService {
         String confirmPassword = changePasswordRequest.getConfirmPassword();
 
         if (currentStudent == null) {
-            return new ChangePasswordResponse("Please Register, User does not exist");
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please Register, User does not exist", HttpStatus.NOT_FOUND);
+
+            //return new ChangePasswordResponse("Please Register, User does not exist");
         } else {
 
             if (passwordEncoder.matches(newPassword, currentStudent.getPassword())) {
-                return new ChangePasswordResponse("Old password cannot be the same as new password");
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Old password cannot be the same as new password", HttpStatus.UNAUTHORIZED);
+
+                //return new ChangePasswordResponse("Old password cannot be the same as new password");
             }
 
             if(!(passwordEncoder.matches(currentPassword,currentStudent.getPassword()))){
-                return  new ChangePasswordResponse(" Original Password is Incorrect");
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Original Password is Incorrect", HttpStatus.UNAUTHORIZED);
+
+                //return  new ChangePasswordResponse("Original Password is Incorrect");
             }
 
             else {
@@ -197,9 +223,11 @@ public class StudentServiceImpl implements StudentService {
                     studentRepository.save(currentStudent);
                     return new ChangePasswordResponse("Password successfully changed");
                 } else {
-                    return new ChangePasswordResponse("Password must match");
+                    throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match", HttpStatus.UNAUTHORIZED);
+
+                    //return new ChangePasswordResponse("Password must match");
                 }
-            }
+             }
         }
     }
 
@@ -236,11 +264,15 @@ public class StudentServiceImpl implements StudentService {
         String confirmPassword = resetPasswordRequest.getConfirmPassword();
 
         if (currentStudent == null) {
-            return new ResetPasswordResponse("Please Register, User does not exist");
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please Register, User does not exist", HttpStatus.NOT_FOUND);
+
+            //return new ResetPasswordResponse("Please Register, User does not exist");
         } else {
             if (passwordEncoder.matches(newPassword, currentStudent.getPassword()))
             {
-                return new ResetPasswordResponse("Old password cannot be the same as new password");
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Old password cannot be the same as new password", HttpStatus.UNAUTHORIZED);
+
+                //return new ResetPasswordResponse("Old password cannot be the same as new password");
             } else
             {
                 if (confirmPassword.equals(newPassword)) {
@@ -248,7 +280,9 @@ public class StudentServiceImpl implements StudentService {
                     studentRepository.save(currentStudent);
                     return new ResetPasswordResponse("Password successfully Reset");
                 } else {
-                    return new ResetPasswordResponse("Password must match");
+                    throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match", HttpStatus.UNAUTHORIZED);
+
+//                    return new ResetPasswordResponse("Password must match");
                 }
             }
         }
@@ -260,7 +294,8 @@ public class StudentServiceImpl implements StudentService {
         List<ViewStudent> viewstudentList = new ArrayList<>();
 
         if (stud==null){
-            return "There are no Departments";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no Departments", HttpStatus.NOT_FOUND);
+            //return "There are no Departments";
         }
         else{
             for (int i = 0; i < stud.size(); i++){
@@ -302,23 +337,29 @@ public class StudentServiceImpl implements StudentService {
         Department dept = departmentRepository.findByDeptName(adminFindStudentRequest.getDeptName());
 
         if (dept==null){
-            return AdminFindStudentResponse
-                    .builder()
-                    .response("Failed")
-                    .code("99")
-                    .message("The Department does not exist").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not exist", HttpStatus.NOT_FOUND);
+
+
+//            return AdminFindStudentResponse
+//                    .builder()
+//                    .response("Failed")
+//                    .code("99")
+//                    .message("The Department does not exist").build();
         }
 
         List deptList = studentRepository.findLevelByDepartmentAndStudent(adminFindStudentRequest.getDeptName());
 
         if (deptList==null || deptList.isEmpty())
         {
-            return AdminFindStudentResponse
-                    .builder()
-                    .response("Failed")
-                    .message("There are no students in these department")
-                    .code("99")
-                    .build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students in these department", HttpStatus.NOT_FOUND);
+
+
+//            return AdminFindStudentResponse
+//                    .builder()
+//                    .response("Failed")
+//                    .message("There are no students in these department")
+//                    .code("99")
+//                    .build();
         }
 
         return AdminFindStudentResponse.builder()
@@ -331,9 +372,37 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public AdminFindStudentResponse showCountLevelByDepartment(String deptName) {
+        Department dept = departmentRepository.findByDeptName(deptName);
+
+        if (dept==null){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "The Department does not exist", HttpStatus.NOT_FOUND);
+
+        }
+
+        List deptList = studentRepository.findLevelByDepartmentAndStudent(deptName);
+
+        if (deptList==null || deptList.isEmpty())
+        {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students in these department", HttpStatus.NOT_FOUND);
+        }
+
+        return AdminFindStudentResponse.builder()
+                .response("Successful")
+                .code("00")
+                .message("These are the number of students in the department by level")
+                .list(deptList)
+                .build();
+    }
+
+    @Override
     public AdminStudentGeneralResponse ShowCountNewStudents() {
 
        Long newStudent = studentRepository.findNewStudentByGivenDate();
+
+        if (newStudent == 0){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are 0 students available from after date", HttpStatus.NOT_FOUND);
+        }
 
        return AdminStudentGeneralResponse.builder()
                .code("00")
@@ -345,6 +414,10 @@ public class StudentServiceImpl implements StudentService {
 
     public AdminStudentGeneralResponse ShowCountOldStudents() {
         Long newStudent = studentRepository.findOldStudentByGivenDate();
+
+        if (newStudent == 0){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are 0 students available from before date", HttpStatus.NOT_FOUND);
+        }
         return AdminStudentGeneralResponse.builder()
                 .code("00")
                 .count(newStudent)

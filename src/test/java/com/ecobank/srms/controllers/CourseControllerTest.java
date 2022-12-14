@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CourseControllerTest {
-    private String globaltoken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxZGZzeXJ0aXlqdHlmZHJydHlmaHI1dWk3eXRqaCIsImlzcyI6IkFueXRoaW5nIiwiZXhwIjoxNjY5MTMzMjQ3fQ.78N0-MrQCqf7S_uSGzclYE_wYVWQ2O0Dm5BFq0ETJT8kKkEJHsEC0maSrb_0gOFb6mjMt2XAofuPLfhivp9WPw";
+    private String globaltoken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxZGZzeXJ0aXlqdHlmZHJydHlmaHI1dWk3eXRqaCIsImlzcyI6IkFueXRoaW5nIiwiZXhwIjoxNjY5OTgzNjA2fQ.3xP-EPuGMBqT9FLvVfq-VzJSgr4JXaVxEHPALGeJi3m5fbxkgcMhfUSjLr4iKsocbKA4LW5cXU7ccUviY_q3Ig";
 
 
     @Autowired
@@ -70,9 +70,9 @@ class CourseControllerTest {
         System.out.println(response.getBody().getClass().getName());
 
         //Object response_map = new Object();
-        List response_map = new ArrayList<>();
-        if (response.getBody() instanceof java.util.ArrayList){
-            response_map = (List<Object>) response.getBody();
+        LinkedHashMap response_map = new LinkedHashMap<>();
+        if (response.getBody() instanceof java.util.LinkedHashMap){
+            response_map = (LinkedHashMap) response.getBody();
         }
         System.out.println(response_map);
 
@@ -121,15 +121,16 @@ class CourseControllerTest {
         headers.setBearerAuth(globaltoken);
         StudentDeleteCourseRequest studentDeleteCourseRequest = new StudentDeleteCourseRequest();
         studentDeleteCourseRequest.setJambNo("JambTest1001");
-        studentDeleteCourseRequest.setCourse_Id(18L);
+        studentDeleteCourseRequest.setCourse_Id(17L);
         String actual = "{\"message\":\"The student hasn't registered for this course\"}";
         HttpEntity entity = new HttpEntity(studentDeleteCourseRequest,headers);
         ResponseEntity response = restTemplate.exchange(
                 createURLWithPort("/api/v1/student/delete_course"), HttpMethod.POST, entity ,String.class);
-        System.out.println(response.getBody().getClass().getName());
+        //System.out.println(response.getBody().getClass().getName());
         System.out.println(response.getBody());
 
+        //Assert.assertEquals(response.getBody().toString().trim(),actual.trim());
+        Assert.assertEquals(response.getStatusCodeValue(),204);
 
-        Assert.assertEquals(response.getBody().toString().trim(),actual.trim());
     }
 }

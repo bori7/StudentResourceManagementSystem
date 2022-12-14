@@ -6,10 +6,13 @@ import com.ecobank.srms.dto.LoginRequest;
 import com.ecobank.srms.dto.ResetPasswordRequest;
 import com.ecobank.srms.dto.StudentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 //import javax.validation.Valid;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -19,24 +22,24 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
     @PostMapping(value="/register")
-    public ResponseEntity register(@RequestBody StudentRequest studentRequest) throws IOException {
-        //return ResponseEntity.ok().body(studentService.Register(studentRequest));
-        return ResponseEntity.ok(studentService.Register(studentRequest));
+    public ResponseEntity register( @Valid @RequestBody  StudentRequest studentRequest) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.Register(studentRequest));
+//        return ResponseEntity.created.(studentService.Register(studentRequest));
     }
     @PostMapping(value="/login")
-    public ResponseEntity Login(@RequestBody LoginRequest loginRequest) throws IOException {
+    public ResponseEntity Login( @Valid @RequestBody LoginRequest loginRequest) throws IOException {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(studentService.Login(loginRequest));
     }
 
     @PostMapping(value="/change_password")
-    public ResponseEntity updateCurrentPassword(@RequestBody ChangePasswordRequest changePasswordRequest) throws IOException {
+    public ResponseEntity updateCurrentPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws IOException {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(studentService.updateCurrentPassword(changePasswordRequest));
     }
 
     @PostMapping(value="/reset_password")
-    public ResponseEntity resetCurrentPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) throws IOException {
+    public ResponseEntity resetCurrentPassword( @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) throws IOException {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(studentService.reset(resetPasswordRequest));
     }

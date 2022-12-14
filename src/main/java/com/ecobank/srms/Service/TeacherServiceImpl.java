@@ -1,12 +1,15 @@
 package com.ecobank.srms.Service;
 
 import com.ecobank.srms.dto.*;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.Teacher;
 import com.ecobank.srms.repository.TeacherRepository;
+import com.ecobank.srms.utils.ResponseCodes;
 import com.ecobank.srms.utils.Token;
 import net.bytebuddy.asm.Advice;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +32,28 @@ public class TeacherServiceImpl implements TeacherService {
         boolean isPresentEmail = teacherRepository.findByEmail(teacherRegisterRequest.getEmail()).isPresent();
 
         if ((isPresent)) {
-            return TeacherRegisterResponse.builder()
-                    .message("The Username : " + teacherRegisterRequest.getUsername() + " Already Exists")
-                    .build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "The Username : " + teacherRegisterRequest.getUsername() + " Already Exists", HttpStatus.BAD_REQUEST);
+
+//            return TeacherRegisterResponse.builder()
+//                    .message("The Username : " + teacherRegisterRequest.getUsername() + " Already Exists")
+//                    .build();
         }
 
         if ((isPresentEmail)) {
-            return TeacherRegisterResponse.builder()
-                    .message("The Email " + teacherRegisterRequest.getEmail() + " Already Exists")
-                    .build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "The Email " + teacherRegisterRequest.getEmail() + " Already Exists", HttpStatus.BAD_REQUEST);
+
+
+//            return TeacherRegisterResponse.builder()
+//
+//                    .message("The Email " + teacherRegisterRequest.getEmail() + " Already Exists")
+//                    .build();
         } else {
             String password = teacherRegisterRequest.getPassword();
             String confirmPassword = teacherRegisterRequest.getConfirmPassword();
             if (!(password.equals(confirmPassword))) {
-                return TeacherRegisterResponse.builder().message("Password must match confirm Password").build();
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Password must match confirm Password", HttpStatus.UNAUTHORIZED);
+
+
             } else {
                 Teacher teacher = new Teacher();
                 ModelMapper modelMapper = new ModelMapper();
@@ -73,10 +84,14 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherRepository.findByUsername(teacherLoginRequest.getUsername()).get();
 
         if (!(ispresent)) {
-            TeacherLoginResponse.builder().message("Please Register / User does not exist").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please Register / User does not exist", HttpStatus.NOT_FOUND);
+
+           // TeacherLoginResponse.builder().message("Please Register / User does not exist").build();
         } else {
             if (!passwordEncoder.matches(teacherLoginRequest.getPassword(), teacher.getPassword())) {
-                return TeacherLoginResponse.builder().message("Incorrect Password").build();
+
+                throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Incorrect Password", HttpStatus.UNAUTHORIZED);
+                //return TeacherLoginResponse.builder().message("Incorrect Password").build();
             }
 
         }

@@ -1,12 +1,13 @@
 package com.ecobank.srms.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -34,7 +35,8 @@ public class Student {
 //    private String regNo;
 
 
-    @NotNull
+    @NotNull(message = "level is empty")
+    @NotBlank(message = "level is mandatory")
     @Column(name = "LEVEL",unique = false,nullable = false)
     private String level;
 

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 
+@Data
 @Configuration
 public class SwaggerConfig {
 
@@ -23,16 +24,15 @@ public class SwaggerConfig {
                         new Components()
                                 .addSecuritySchemes("bearer-jwt",
                                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT").in(SecurityScheme.In.HEADER).name("Authorization"))
-                                .addSecuritySchemes("xAffiliate",
-                                        new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER).name("xAffiliate")))
+                )
                 .info(info())
                 .addSecurityItem(
                         new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write")).addList("xAffiliate", Arrays.asList("read", "write")));
     }
 
     private Info info(){
-        return new Info().description("Admin Service API")
-                .termsOfService(null).title("Admin Service API")
+        return new Info().description("SRMS Service API")
+                .termsOfService(null).title("SRMS Service API")
                 .version("Version 1 Released | © 2021");
     }
 }

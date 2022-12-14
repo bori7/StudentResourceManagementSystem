@@ -95,6 +95,7 @@ class BioMedDataControllerTest {
                 createURLWithPort("/api/v1/student/save_biodata"), HttpMethod.POST, entity ,String.class);
 
         Assert.assertEquals(response.getBody().toString().trim(),actual.trim());
+        Assert.assertEquals(response.getStatusCodeValue(),201);
     }
 
 

@@ -3,13 +3,16 @@ package com.ecobank.srms.Service;
 import com.ecobank.srms.dto.AdminCountDeptDisplayResponse;
 import com.ecobank.srms.dto.AdminCountStudDeptRequest;
 import com.ecobank.srms.dto.AdminCountStudDisplayResponse;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.Courses;
 import com.ecobank.srms.model.Department;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.model.ViewCourse;
 import com.ecobank.srms.repository.DepartmentRepository;
 import com.ecobank.srms.repository.StudentRepository;
+import com.ecobank.srms.utils.ResponseCodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,7 +48,8 @@ public class DepartmentServiceImpl implements DepartmentService{
         List<Department> dept = departmentRepository.findAll();
          List<Object> deptView = new ArrayList<>();
         if (dept==null){
-            return "There are no Departments";
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no Departments", HttpStatus.NOT_FOUND);
+
         }
         else{
             for (int i = 0; i < dept.size(); i++){
@@ -71,14 +75,16 @@ public class DepartmentServiceImpl implements DepartmentService{
         List<Student> student = studentRepository.findByDepartment(adminCountStudDeptRequest.getDeptName());
 
         if (department == null) {
-            return AdminCountStudDisplayResponse.builder().message("There is no department with that name").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no department with that name", HttpStatus.NOT_FOUND);
+
         }
 
 
         List<Object> studView = new ArrayList<>();
 
         if (student.isEmpty()) {
-            return AdminCountStudDisplayResponse.builder().message("There are no students").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students", HttpStatus.NOT_FOUND);
+
         } else {
             for (int i = 0; i < student.size(); i++) {
                 studView.add(student.get(i));
@@ -91,5 +97,31 @@ public class DepartmentServiceImpl implements DepartmentService{
         }
     }
 
+    public AdminCountStudDisplayResponse displaycountStudDept(String deptName) {
+        Department department = departmentRepository.findByDeptName(deptName);
+        List<Student> student = studentRepository.findByDepartment(deptName);
+
+        if (department == null) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There is no department with that name", HttpStatus.NOT_FOUND);
+
+        }
+
+
+        List<Object> studView = new ArrayList<>();
+
+        if (student.isEmpty()) {
+            throw new GenericException(ResponseCodes.NOT_FOUND, "There are no students", HttpStatus.NOT_FOUND);
+
+        } else {
+            for (int i = 0; i < student.size(); i++) {
+                studView.add(student.get(i));
+            }
+            return AdminCountStudDisplayResponse.builder()
+                    .response("These are the number of students in the department")
+                    .count((long) studView.size())
+                    .message("Successful")
+                    .build();
+        }
+    }
 
 }

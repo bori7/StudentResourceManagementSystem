@@ -6,5 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ViewCoursesRequest {
+
+
     private String regNo;
 }

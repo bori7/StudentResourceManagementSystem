@@ -3,15 +3,18 @@ package com.ecobank.srms.Service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ecobank.srms.dto.*;
+import com.ecobank.srms.exceptions.GenericException;
 import com.ecobank.srms.model.BioMedData;
 import com.ecobank.srms.model.Student;
 import com.ecobank.srms.repository.BioMedDataRepository;
 import com.ecobank.srms.repository.StudentRepository;
 import com.ecobank.srms.utils.ImageTrans;
+import com.ecobank.srms.utils.ResponseCodes;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,14 +66,20 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
         if (student == null)
-            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please use an existing JambNo", HttpStatus.NOT_FOUND);
+
+//        return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
 
         if (!(bio == null))
-                return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
+            throw new GenericException(ResponseCodes.ALREADY_EXIST, "Bio Data exists, Please update form", HttpStatus.BAD_REQUEST);
+
+        // return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
 
 
         if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture().equals("")){
-            return BioMedDataResponse.builder().message("Please Upload a photo").build();
+
+            throw new GenericException(ResponseCodes.BAD_DATA, "Please Upload a photo", HttpStatus.BAD_REQUEST);
+//            return BioMedDataResponse.builder().message("Please Upload a photo").build();
         }
 
 
@@ -91,40 +100,6 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     }
 
 
-    @Override
-    public BioMedDataResponse saveHeroku(BioMedDataRequest bioMedDataRequest) throws IOException {
-        BioMedData bio = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
-
-
-        Student student = studentRepository.findPersonByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
-
-        if (student == null)
-            return BioMedDataResponse.builder().message("Please use an existing JambNo").build();
-
-        if (!(bio == null))
-            return BioMedDataResponse.builder().message("Bio Data exists, Please update form").build();
-
-
-        if(bioMedDataRequest.getPicture()==null || bioMedDataRequest.getPicture().equals("")){
-            return BioMedDataResponse.builder().message("Please Upload a photo").build();
-        }
-
-
-        bioMedDataRequest.setPicture((uploadUri(bioMedDataRequest.getPicture())));
-
-
-
-        logger.info("First_Name " + bioMedDataRequest.getfName());
-        logger.info("Surname"+bioMedDataRequest.getSurName());
-        logger.info("Marital_status " +bioMedDataRequest.getmStatus());
-        logger.info("Marital_status " +bioMedDataRequest.getAge());
-        logger.info("Marital_status " +bioMedDataRequest.getAddress());
-
-
-        modelMapper.map(bioMedDataRequest, bioMedData);
-        bioMedDataRepository.save(bioMedData);
-        return BioMedDataResponse.builder().message("Thank you").build();
-    }
 
     public BioMedDataResponse update(BioMedDataRequest bioMedDataRequest) throws IOException {
 
@@ -132,7 +107,9 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
         if (bioMedData == null)
-            return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please use an existing JambNo/save biodata", HttpStatus.NOT_FOUND);
+
+//        return BioMedDataResponse.builder().message("Please use an existing JambNo/save biodata").build();
 
 
         bioMedDataRequest.setStudentId(bioMedData.getStudentId());
@@ -161,7 +138,10 @@ public class BioMedDataServiceImpl implements BioMedDataService {
          BioMedData biodata = bioMedDataRepository.findByJambNo(bioMedDataRequest.getJambNo()).orElse(null);
 
          if(biodata==null){
-             return ProfileResponse.builder().message("Please Fill BioData form").build();
+             throw new GenericException(ResponseCodes.NOT_FOUND, "Please Fill BioData form", HttpStatus.NOT_FOUND);
+
+
+//             return ProfileResponse.builder().message("Please Fill BioData form").build();
          }
 
              ProfileResponse profileResponse = new ProfileResponse();
@@ -281,13 +261,35 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         boolean ispresent = bioMedDataRepository.findByJambNo(displayPictureRequest.getJambNo()).isPresent();
 
         if (!ispresent){
-            return DisplayPictureResponse.builder().message("Cannot display picture to unknown JambNo").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Cannot display picture to unknown JambNo", HttpStatus.NOT_FOUND);
+//            return DisplayPictureResponse.builder().message("Cannot display picture to unknown JambNo").build();
         }
 
        String url = getPic(displayPictureRequest.getJambNo());
 
         if (url == null){
-           return DisplayPictureResponse.builder().message("no picture present").build();
+            throw new GenericException(ResponseCodes.NOT_FOUND, "no picture present", HttpStatus.NOT_FOUND);
+
+            //return DisplayPictureResponse.builder().message("no picture present").build();
+        }
+        return DisplayPictureResponse.builder().message("Picture Displayed").picUrl(url).code("00").build();
+    }
+
+    @Override
+    public DisplayPictureResponse displayPic(String jambNo) throws IOException {
+        boolean ispresent = bioMedDataRepository.findByJambNo(jambNo).isPresent();
+
+        if (!ispresent){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Cannot display picture to unknown JambNo", HttpStatus.NOT_FOUND);
+//            return DisplayPictureResponse.builder().message("Cannot display picture to unknown JambNo").build();
+        }
+
+        String url = getPic(jambNo);
+
+        if (url == null){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "no picture present", HttpStatus.NOT_FOUND);
+
+            //return DisplayPictureResponse.builder().message("no picture present").build();
         }
         return DisplayPictureResponse.builder().message("Picture Displayed").picUrl(url).code("00").build();
     }
