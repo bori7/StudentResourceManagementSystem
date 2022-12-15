@@ -163,6 +163,35 @@ public class BioMedDataServiceImpl implements BioMedDataService {
     }
 
     @Override
+    public ProfileResponse display(String jambNo) throws Exception {
+        BioMedData biodata = bioMedDataRepository.findByJambNo(jambNo).orElse(null);
+
+        if(biodata==null){
+            throw new GenericException(ResponseCodes.NOT_FOUND, "Please Fill BioData form", HttpStatus.NOT_FOUND);
+
+
+//             return ProfileResponse.builder().message("Please Fill BioData form").build();
+        }
+
+        ProfileResponse profileResponse = new ProfileResponse();
+        modelMapper.map(biodata, profileResponse);
+        return profileResponse.builder().message("Profile retrived")
+                .age(biodata.getAge())
+                .dateOfBirth(biodata.getDateOfBirth())
+                .lga(biodata.getLga())
+                .sex(biodata.getSex())
+                .midName(biodata.getMidName())
+                .faculty(biodata.getFaculty())
+                .fName(biodata.getFName())
+                .surName(biodata.getSurName())
+                .stOfOrg(biodata.getStOfOrg())
+                .department(biodata.getDepartment())
+                .picture(biodata.getPicture())
+                .build();
+
+    }
+
+    @Override
     public File storeImage(MultipartFile img, String filecat) throws IOException{
         String basepath = System.getProperty("user.dir");
         String uploadDir = "/uploads/";

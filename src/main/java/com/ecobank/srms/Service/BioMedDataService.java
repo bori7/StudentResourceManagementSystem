@@ -16,6 +16,8 @@ public interface BioMedDataService {
 
    ProfileResponse display(BioMedDataRequest bioMedDataRequest) throws Exception;
 
+    ProfileResponse display(String jambNo) throws Exception;
+
     File storeImage(MultipartFile img, String Filecat) throws IOException;
 
     File CompressJpgImage(File input) throws IOException;

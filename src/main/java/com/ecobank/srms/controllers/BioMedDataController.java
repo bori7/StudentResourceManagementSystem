@@ -47,9 +47,9 @@ public class BioMedDataController {
             return ResponseEntity.ok(bioMedDataService.update(bioMedDataRequest));
         }
 
-        @PostMapping(value = "/profile")
-        public ResponseEntity displayProfile(@Valid @RequestBody BioMedDataRequest bioMedDataRequest) throws Exception {
-                return ResponseEntity.ok(bioMedDataService.display(bioMedDataRequest));
+        @GetMapping(value = "/profile")
+        public ResponseEntity displayProfile( @RequestBody @RequestParam String jambNo) throws Exception {
+                return ResponseEntity.ok(bioMedDataService.display(jambNo));
         }
 
 
