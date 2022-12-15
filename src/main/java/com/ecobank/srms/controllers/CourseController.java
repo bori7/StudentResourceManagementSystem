@@ -41,8 +41,8 @@ public class CourseController {
 //        return ResponseEntity.ok(courseManageService.view(viewCoursesRequest));
 //    }
 
-    @GetMapping(value="/view_course/{regNo}")
-    public ResponseEntity view(@PathVariable String regNo) throws Exception {
+    @GetMapping(value="/view_course")
+    public ResponseEntity view(@RequestParam String regNo) throws Exception {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(courseManageService.view(regNo));
     }
@@ -53,8 +53,8 @@ public class CourseController {
 //        return ResponseEntity.ok(courseManageService.getCoursebyDepartment(CourseDisplayRequest));
 //    }
 
-    @GetMapping(value="/view_All_course/{department_name}")
-    public ResponseEntity getCoursebyDepartment(@PathVariable String department_name) throws Exception {
+    @GetMapping(value="/view_All_course")
+    public ResponseEntity getCoursebyDepartment(@RequestParam String department_name) throws Exception {
         //return ResponseEntity.ok().body(studentService.Register(studentRequest));
         return ResponseEntity.ok(courseManageService.getCoursebyDepartment(department_name));
     }

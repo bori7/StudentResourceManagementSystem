@@ -66,8 +66,8 @@ public class AdminController {
     }
 
 
-    @GetMapping(value = "/display_student_dept/{deptName}")
-    public ResponseEntity displayStudDept2(@PathVariable String deptName) throws IOException {
+    @GetMapping(value = "/display_student_dept")
+    public ResponseEntity displayStudDept2(@RequestParam String deptName) throws IOException {
         return ResponseEntity.ok(adminService.displayStudDept(deptName));
     }
 
@@ -96,8 +96,8 @@ public class AdminController {
 //        return ResponseEntity.ok(departmentService.displaycountStudDept(adminCountStudDeptRequest));
 //    }
 
-    @GetMapping(value = "/count_student_dept/{deptName}")
-    public ResponseEntity countStudDept(@PathVariable String deptName) throws IOException {
+    @GetMapping(value = "/count_student_dept")
+    public ResponseEntity countStudDept(@RequestParam String deptName) throws IOException {
         return ResponseEntity.ok(departmentService.displaycountStudDept(deptName));
     }
 
@@ -107,8 +107,8 @@ public class AdminController {
 //        return ResponseEntity.ok(adminService.displayStudLevel(adminFindStudentLevelRequest));
 //    }
 
-    @GetMapping(value = "/display_student_level/{level}")
-    public ResponseEntity displayStudLevel(@PathVariable String level) throws IOException {
+    @GetMapping(value = "/display_student_level")
+    public ResponseEntity displayStudLevel(@RequestParam String level) throws IOException {
         return ResponseEntity.ok(adminService.displayStudLevel(level));
     }
 
@@ -122,8 +122,8 @@ public class AdminController {
 //        return ResponseEntity.ok(studentService.showCountLevelByDepartment(adminFindStudentRequest));
 //    }
 
-    @GetMapping(value = "/show_count_all_level_by_department/{deptName}")
-    public ResponseEntity countStudLevelbydepartment(@PathVariable String deptName) throws IOException {
+    @GetMapping(value = "/show_count_all_level_by_department")
+    public ResponseEntity countStudLevelbydepartment(@RequestParam String deptName) throws IOException {
         return ResponseEntity.ok(studentService.showCountLevelByDepartment(deptName));
     }
 
