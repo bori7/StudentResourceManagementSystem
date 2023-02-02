@@ -103,8 +103,14 @@ public class AdminServiceImpl implements AdminService {
     public AdminLoginResponse login(AdminLoginRequest adminLoginRequest) throws IOException {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+      logger.info("Username "+ adminLoginRequest.getUsername());
+
         boolean isPresent = adminRepository.findByUsername(adminLoginRequest.getUsername()).isPresent();
+        logger.info("Ispresent + " + isPresent);
+
+
         Admin admin = adminRepository.findByUsername(adminLoginRequest.getUsername()).get();
+
 
         Token token = new Token();
 
@@ -113,7 +119,11 @@ public class AdminServiceImpl implements AdminService {
 
             //return AdminLoginResponse.builder().message("The User Doesn't exist").build();
 
-        } else {
+        }
+
+
+        else {
+
             if (!passwordEncoder.matches(adminLoginRequest.getPassword(), admin.getPassword())) {
                 throw new GenericException(ResponseCodes.INVALID_CREDENTIAL, "Incorrect Password", HttpStatus.UNAUTHORIZED);
 

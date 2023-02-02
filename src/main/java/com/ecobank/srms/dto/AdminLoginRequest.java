@@ -7,8 +7,8 @@ import javax.validation.constraints.Size;
 
 @Data
 public class AdminLoginRequest {
-    @NotEmpty(message = "jambNo cannot be empty")
-    @Size(min = 4,message = "jambNo must be more than 4")
+    @NotEmpty(message = "Username cannot be empty")
+    @Size(min = 4,message = "Username must be more than 4")
     private String username;
 
     @NotEmpty(message = "Password cannot be empty")
