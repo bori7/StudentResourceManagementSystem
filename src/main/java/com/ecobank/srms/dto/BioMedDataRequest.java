@@ -24,7 +24,7 @@ public class BioMedDataRequest {
     private String jambNo;
 
     @NotNull(message = "Date Of Birth cannot be null")
-    @Pattern(regexp = "^\\d{4}/\\d{2}/\\d{2}$",message = "Date Format Not appropriate, must be YYYY/MM/DD")
+    @Pattern(regexp = "^\\d{2}-\\d{2}-\\d{4}$",message = "Date Format Not appropriate, must be DD-MM-YYYY")
     private String dateOfBirth;
 
     @NotNull(message = "age cannot be null")

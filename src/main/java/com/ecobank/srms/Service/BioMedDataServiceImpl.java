@@ -83,6 +83,8 @@ public class BioMedDataServiceImpl implements BioMedDataService {
         }
 
 
+
+
         bioMedDataRequest.setPicture((uploadUri(bioMedDataRequest.getPicture())));
 
 
@@ -95,6 +97,11 @@ public class BioMedDataServiceImpl implements BioMedDataService {
 
 
             modelMapper.map(bioMedDataRequest, bioMedData);
+
+//            if(!bioMedDataRequest.getJambNo().equals(student.getJambNo())){
+//                throw new GenericException(ResponseCodes.BAD_DATA, "Please Ensure JambNO is correct", HttpStatus.BAD_REQUEST);
+//            }
+
             bioMedDataRepository.save(bioMedData);
             return BioMedDataResponse.builder().message("Thank you").build();
     }
